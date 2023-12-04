@@ -1,6 +1,9 @@
 #env
 .env
 
+# prisma / migrations
+prisma/migrations
+
 # compiled output
 /dist
 /node_modules
