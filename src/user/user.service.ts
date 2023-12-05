@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaRepository } from '../repositories/prisma.repository';
 import { User } from '../models/user.model';
-import { CreateUserInput } from './dto/input/create-user.input';
+import { CreateAccountInput } from './dto/input/create-account.input';
 import { hash, verify } from '@node-rs/bcrypt';
 import { UserResponse } from './dto/reponse/user.response';
 import { ProfileArgs } from './dto/args/profile.args';
@@ -16,14 +16,16 @@ export class UserService {
     return this.prisma.user.findUnique({ where: { id: 1 } });
   }
 
-  async createAccount(createUserData: CreateUserInput): Promise<UserResponse> {
+  async createAccount(
+    createAccountData: CreateAccountInput,
+  ): Promise<UserResponse> {
     //check if username or email are already on db
     try {
       const existingUser = await this.prisma.user.findFirst({
         where: {
           OR: [
-            { username: createUserData.username },
-            { email: createUserData.email },
+            { username: createAccountData.username },
+            { email: createAccountData.email },
           ],
         },
       });
@@ -31,12 +33,12 @@ export class UserService {
         throw new Error('This username/password is already taken.');
       }
       //hash password
-      createUserData.password = await hash(createUserData.password, 12);
+      createAccountData.password = await hash(createAccountData.password, 12);
 
       //save and return the user
       const createdUser = await this.prisma.user.create({
         data: {
-          ...createUserData,
+          ...createAccountData,
         },
       });
       return {

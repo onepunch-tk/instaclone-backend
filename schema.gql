@@ -31,16 +31,22 @@ type SigninResponse {
   token: String
 }
 
+type EditProfileResponse {
+  success: Boolean!
+  error: String
+}
+
 type Query {
   seeProfile(username: String!): UserResponse!
 }
 
 type Mutation {
-  createAccount(createUserData: CreateUserInput!): UserResponse!
+  createAccount(createAccountData: CreateAccountInput!): UserResponse!
   signin(signinData: SigninInput!): SigninResponse!
+  editProfile(editProfileData: EditProfileInput!): EditProfileResponse!
 }
 
-input CreateUserInput {
+input CreateAccountInput {
   firstName: String!
   lastName: String
   username: String!
@@ -51,4 +57,13 @@ input CreateUserInput {
 input SigninInput {
   username: String!
   password: String!
+}
+
+input EditProfileInput {
+  id: Int
+  firstName: String
+  lastName: String
+  username: String
+  email: String
+  password: String
 }
