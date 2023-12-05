@@ -5,6 +5,7 @@ import { upperDirectiveTransformer } from './common/directives/upper-case.direct
 import { DirectiveLocation, GraphQLDirective } from 'graphql';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserModule } from './user/user.module';
         ],
       },
     }),
+    AuthModule,
     UserModule,
   ],
 })

@@ -25,15 +25,15 @@ type UserResponse {
   user: User
 }
 
-type SigninResponse {
-  success: Boolean!
-  error: String
-  token: String
-}
-
 type EditProfileResponse {
   success: Boolean!
   error: String
+}
+
+type SignInResponse {
+  success: Boolean!
+  error: String
+  token: String
 }
 
 type Query {
@@ -41,9 +41,14 @@ type Query {
 }
 
 type Mutation {
+  signIn(signInData: SignInInput!): SignInResponse!
   createAccount(createAccountData: CreateAccountInput!): UserResponse!
-  signin(signinData: SigninInput!): SigninResponse!
   editProfile(editProfileData: EditProfileInput!): EditProfileResponse!
+}
+
+input SignInInput {
+  username: String!
+  password: String!
 }
 
 input CreateAccountInput {
@@ -51,11 +56,6 @@ input CreateAccountInput {
   lastName: String
   username: String!
   email: String!
-  password: String!
-}
-
-input SigninInput {
-  username: String!
   password: String!
 }
 
