@@ -3,7 +3,7 @@ import { ResponseType } from '../../../common/graphql-reponse.type';
 import { User } from '../../../models/user.model';
 
 @ObjectType()
-export class CreateUserResponse extends ResponseType {
+export class UserResponse extends ResponseType {
   @Field(() => User, { nullable: true })
   user?: User;
 }

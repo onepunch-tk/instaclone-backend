@@ -1,22 +1,31 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
-import { User } from '../models/user.model';
 import { CreateUserInput } from './dto/input/create-user.input';
-import { CreateUserResponse } from './dto/reponse/create-user.response';
+import { UserResponse } from './dto/reponse/user.response';
+import { ProfileArgs } from './dto/args/profile.args';
+import { SigninResponse } from './dto/reponse/signin.response';
+import { SigninInput } from './dto/input/signin.input';
 
 @Resolver()
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
-  @Query(() => User)
-  async getUser() {
-    return this.userService.getUser();
+  @Query(() => UserResponse)
+  async seeProfile(@Args() username: ProfileArgs) {
+    return this.userService.seeProfile(username);
   }
 
-  @Mutation(() => CreateUserResponse)
+  @Mutation(() => UserResponse)
   async createAccount(
     @Args('createUserData') createUserData: CreateUserInput,
-  ): Promise<CreateUserResponse> {
+  ): Promise<UserResponse> {
     return this.userService.createAccount(createUserData);
+  }
+
+  @Mutation(() => SigninResponse)
+  async signin(
+    @Args('signinData') signinData: SigninInput,
+  ): Promise<SigninResponse> {
+    return this.userService.signin(signinData);
   }
 }
