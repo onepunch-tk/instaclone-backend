@@ -4,11 +4,11 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { upperDirectiveTransformer } from './common/directives/upper-case.directive';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
 import { GraphQLExceptionFilter } from './common/filters/graphql-exception.filter';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { GraphQLFormattedError } from 'graphql';
-import { ApolloError } from 'apollo-server-express';
+import { AuthGuard } from './auth/auth.guard';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,7 +22,6 @@ import { ApolloError } from 'apollo-server-express';
       transformSchema: (schema) => upperDirectiveTransformer(schema, 'upper'),
       installSubscriptionHandlers: true,
       formatError: (error: GraphQLFormattedError) => {
-        const graphQLError = new ApolloError(error.message);
         return {
           // ...graphQLError,
           message: error.message, // 원래 오류 메시지
@@ -35,6 +34,10 @@ import { ApolloError } from 'apollo-server-express';
     UserModule,
   ],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
     {
       provide: APP_FILTER,
       useClass: GraphQLExceptionFilter,

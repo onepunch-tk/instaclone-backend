@@ -41,18 +41,19 @@ export class UserService {
         },
       });
       return {
-        user: createdUser,
+        data: createdUser,
       };
     } catch (e) {
       return {
-        success: false,
-        error: e.message,
+        errors: {
+          message: e.message,
+        },
       };
     }
   }
 
   async editProfile(
-    id: number,
+    authUser: User,
     editProfileData: EditProfileInput,
   ): Promise<EditProfileResponse> {
     try {
@@ -61,21 +62,22 @@ export class UserService {
       }
 
       const updatedUser = await this.prisma.user.update({
-        where: { id },
+        where: { id: authUser.id },
         data: {
           ...editProfileData,
         },
       });
 
       if (updatedUser) {
-        return {};
+        return { data: updatedUser };
       } else {
         throw new Error('Could not updated profile.');
       }
     } catch (e) {
       return {
-        success: false,
-        error: e.message,
+        errors: {
+          message: e.message,
+        },
       };
     }
   }
@@ -90,12 +92,13 @@ export class UserService {
       }
 
       return {
-        user: findUser,
+        data: findUser,
       };
     } catch (e) {
       return {
-        success: false,
-        error: e.message,
+        errors: {
+          message: e.message,
+        },
       };
     }
   }

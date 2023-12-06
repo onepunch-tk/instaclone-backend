@@ -7,11 +7,24 @@ import {
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
 import { GraphQLError } from 'graphql/error';
+import { Reflector } from '@nestjs/core';
+import { Role } from '../constants/role.enum';
+import { ROLES_KEY } from '../common/decorators/roles.decorator';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private readonly reflector: Reflector,
+  ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    if (requiredRoles && requiredRoles.includes(Role.PUBLIC)) {
+      return true;
+    }
     const gqlCtx = GqlExecutionContext.create(context).getContext();
     const token = this.extractTokenFromHeader(gqlCtx.req);
     // GraphQL 컨텍스트의 응답 객체

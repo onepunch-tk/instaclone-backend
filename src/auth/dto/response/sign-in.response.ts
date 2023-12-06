@@ -1,8 +1,11 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { ResponseType } from '../../../common/graphql-reponse.type';
+import { createResponseType } from '../../../common/types/graphql-reponse.type';
 
 @ObjectType()
-export class SignInResponse extends ResponseType {
+class Token {
   @Field(() => String, { nullable: true })
   token?: string;
 }
+
+@ObjectType()
+export class SignInResponse extends createResponseType(Token) {}

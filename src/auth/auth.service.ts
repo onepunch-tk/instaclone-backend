@@ -35,11 +35,10 @@ export class AuthService {
       // const token = jwt.sign({ id: findUser.id }, process.env.SECRET_KEY);
       const token = await this.jwtService.signAsync({ authUser });
 
-      return { token };
+      return { data: { token } };
     } catch (e) {
       return {
-        success: false,
-        error: e.message,
+        errors: { message: e.message },
       };
     }
   }
