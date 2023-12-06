@@ -8,7 +8,7 @@ import { EditProfileResponse } from './dto/reponse/edit-profile.response';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { User } from '../models/user.model';
-import { AuthUser } from '../decorators/auth.decorator';
+import { AuthUser } from '../common/decorators/auth.decorator';
 
 @Resolver()
 export class UserResolver {

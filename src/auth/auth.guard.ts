@@ -6,27 +6,34 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
+import { GraphQLError } from 'graphql/error';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const gqlCtx = GqlExecutionContext.create(context).getContext();
+    const token = this.extractTokenFromHeader(gqlCtx.req);
+    // GraphQL 컨텍스트의 응답 객체
+    if (!token) {
+      gqlCtx.response = { test: 'kk' };
+      throw new GraphQLError('Need Sign In', {
+        extensions: {
+          code: 'hoho',
+        },
+      });
+    }
     try {
-      const ctx = GqlExecutionContext.create(context);
-      const token = this.extractTokenFromHeader(ctx.getContext().req);
-      if (!token) {
-        throw new UnauthorizedException();
-      }
       const payload = await this.jwtService.verifyAsync(token);
 
       if (!payload.authUser) {
-        throw new UnauthorizedException('Invalid token');
+        throw new UnauthorizedException('Invaild token');
       }
-      ctx.getContext().authUser = payload.authUser;
+      gqlCtx.authUser = payload.authUser;
     } catch (e) {
-      const message = e.message;
-      throw new UnauthorizedException(message && message);
+      throw new GraphQLError(e.message);
     }
+
     return true;
   }
 
