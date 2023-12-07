@@ -21,6 +21,10 @@ import { AuthModule } from './auth/auth.module';
       autoSchemaFile: 'schema.gql',
       transformSchema: (schema) => upperDirectiveTransformer(schema, 'upper'),
       installSubscriptionHandlers: true,
+      buildSchemaOptions: {
+        numberScalarMode: 'integer',
+      },
+      context: ({ req, reply }) => ({ req, reply }),
       formatError: (error: GraphQLFormattedError) => {
         return {
           // ...graphQLError,
@@ -44,8 +48,4 @@ import { AuthModule } from './auth/auth.module';
     },
   ],
 })
-export class AppModule {
-  constructor() {
-    console.log(`🚀 Server is running on http://localhost:${process.env.PORT}`);
-  }
-}
+export class AppModule {}

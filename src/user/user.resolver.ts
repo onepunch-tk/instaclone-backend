@@ -5,7 +5,7 @@ import { UserResponse } from './dto/reponse/user.response';
 import { ProfileArgs } from './dto/args/profile.args';
 import { EditProfileInput } from './dto/input/edit-profile.input';
 import { EditProfileResponse } from './dto/reponse/edit-profile.response';
-import { User } from '../models/user.model';
+import { User } from '../common/models/user.model';
 import { AuthUser } from '../common/decorators/auth.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '../constants/role.enum';

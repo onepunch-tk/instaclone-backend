@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaRepository } from '../repositories/prisma.repository';
-import { User } from '../models/user.model';
+import { User } from '../common/models/user.model';
 import { CreateAccountInput } from './dto/input/create-account.input';
 import { hash } from '@node-rs/bcrypt';
 import { UserResponse } from './dto/reponse/user.response';
@@ -41,7 +41,7 @@ export class UserService {
         },
       });
       return {
-        data: createdUser,
+        data: { ...createdUser },
       };
     } catch (e) {
       return {
@@ -61,15 +61,21 @@ export class UserService {
         editProfileData.password = await hash(editProfileData.password, 12);
       }
 
+      if (editProfileData.avatar) {
+        const { filename, createReadStream } = await editProfileData.avatar;
+        const stream = createReadStream();
+        console.log(stream);
+      }
+
       const updatedUser = await this.prisma.user.update({
         where: { id: authUser.id },
         data: {
-          ...editProfileData,
+          // ...editProfileData,
         },
       });
 
       if (updatedUser) {
-        return { data: updatedUser };
+        return { data: { ...updatedUser } };
       } else {
         throw new Error('Could not updated profile.');
       }
@@ -92,7 +98,7 @@ export class UserService {
       }
 
       return {
-        data: findUser,
+        data: { ...findUser },
       };
     } catch (e) {
       return {

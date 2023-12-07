@@ -1,5 +1,5 @@
 import { ObjectType } from '@nestjs/graphql';
-import { User } from '../../../models/user.model';
+import { User } from '../../../common/models/user.model';
 import { createResponseType } from '../../../common/types/graphql-reponse.type';
 
 @ObjectType()

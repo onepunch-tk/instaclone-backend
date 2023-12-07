@@ -17,6 +17,12 @@ export class User {
   @Field(() => String)
   email: string;
 
+  @Field(() => String, { nullable: true })
+  bio: string;
+
+  @Field(() => String, { nullable: true })
+  avatar: string;
+
   @Field(() => Date, { nullable: true })
   createdAt: Date;
 
