@@ -6,6 +6,8 @@ import {
 } from '@nestjs/platform-fastify';
 import { processRequest } from 'graphql-upload';
 import { FastifyRequest } from 'fastify';
+import fastifyStatic from '@fastify/static';
+import { resolve } from 'path';
 
 interface MultipartFastifyReq extends FastifyRequest {
   isMultipart: boolean;
@@ -39,7 +41,10 @@ async function bootstrap() {
     AppModule,
     fastifyAdapter,
   );
-
+  await app.register(fastifyStatic, {
+    root: resolve(process.cwd(), 'uploads'), // 'public' 폴더 경로 설정
+    prefix: '/uploads/', // URL 접두사 (예: http://localhost:3000/public/images/example.jpg)
+  });
   await app.listen(process.env.PORT);
 }
 bootstrap();

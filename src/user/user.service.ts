@@ -7,6 +7,7 @@ import { UserResponse } from './dto/reponse/user.response';
 import { ProfileArgs } from './dto/args/profile.args';
 import { EditProfileInput } from './dto/input/edit-profile.input';
 import { EditProfileResponse } from './dto/reponse/edit-profile.response';
+import { createWriteStream } from 'fs';
 
 @Injectable()
 export class UserService {
@@ -62,9 +63,13 @@ export class UserService {
       }
 
       if (editProfileData.avatar) {
+        /* local test */
         const { filename, createReadStream } = await editProfileData.avatar;
-        const stream = createReadStream();
-        console.log(stream);
+        const readStream = createReadStream();
+        const writeStream = createWriteStream(
+          `${process.cwd()}/uploads/${filename}`,
+        );
+        readStream.pipe(writeStream);
       }
 
       const updatedUser = await this.prisma.user.update({
