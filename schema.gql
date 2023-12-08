@@ -12,6 +12,8 @@ type User {
   avatar: String
   createdAt: DateTime
   updatedAt: DateTime
+  followedBy: [User!]
+  following: [User!]
 }
 
 """
@@ -42,6 +44,30 @@ type SignInResponse {
   data: Token
 }
 
+type Success {
+  success: Boolean
+}
+
+type FollowResponse {
+  errors: Error
+  data: Success
+}
+
+type Follow {
+  id: Int!
+  followedBy: [User!]
+  following: [User!]
+  followedByCount: Int!
+  followingCount: Int!
+  isMe: Boolean!
+  isFollowing: Boolean!
+}
+
+type SeeFollowResponse {
+  errors: Error
+  data: Follow
+}
+
 type Query {
   seeProfile(username: String!): UserResponse!
 }
@@ -50,6 +76,8 @@ type Mutation {
   signIn(signInData: SignInInput!): SignInResponse!
   createAccount(createAccountData: CreateAccountInput!): UserResponse!
   editProfile(editProfileData: EditProfileInput!): EditProfileResponse!
+  follow(followData: FollowInput!): FollowResponse!
+  seeFollow(seeFollowData: SeeFollowInput!): SeeFollowResponse!
 }
 
 input SignInInput {
@@ -80,3 +108,25 @@ input EditProfileInput {
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+input FollowInput {
+  username: String!
+  role: FollowRole!
+}
+
+enum FollowRole {
+  FOLLOW
+  UN_FOLLOW
+}
+
+input SeeFollowInput {
+  username: String!
+  afterId: Int
+  role: SeeFollowRole! = ALL_FOLLOW
+}
+
+enum SeeFollowRole {
+  FOLLOWED_BY
+  FOLLOWING
+  ALL_FOLLOW
+}

@@ -3,12 +3,12 @@ import { SignInResponse } from './dto/response/sign-in.response';
 import { SignInInput } from './dto/input/sign-in.input';
 import { AuthService } from './auth.service';
 import { Roles } from '../common/decorators/roles.decorator';
-import { Role } from '../constants/role.enum';
+import { GuardRole } from '../constants/role.enum';
 
 @Resolver()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
-  @Roles(Role.PUBLIC)
+  @Roles(GuardRole.PUBLIC)
   @Mutation(() => SignInResponse)
   async signIn(
     @Args('signInData') signInData: SignInInput,

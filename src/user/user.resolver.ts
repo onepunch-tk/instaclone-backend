@@ -8,18 +8,18 @@ import { EditProfileResponse } from './dto/reponse/edit-profile.response';
 import { User } from '../common/models/user.model';
 import { AuthUser } from '../common/decorators/auth.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
-import { Role } from '../constants/role.enum';
+import { GuardRole } from '../constants/role.enum';
 
-@Resolver()
+@Resolver(() => User)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
-  @Roles(Role.PUBLIC)
+  @Roles(GuardRole.PUBLIC)
   @Query(() => UserResponse)
   async seeProfile(@Args() username: ProfileArgs) {
     return this.userService.seeProfile(username);
   }
-  @Roles(Role.PUBLIC)
+  @Roles(GuardRole.PUBLIC)
   @Mutation(() => UserResponse)
   async createAccount(
     @Args('createAccountData') createAccountData: CreateAccountInput,

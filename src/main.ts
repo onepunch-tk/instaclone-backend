@@ -14,7 +14,7 @@ interface MultipartFastifyReq extends FastifyRequest {
 }
 
 async function bootstrap() {
-  const fastifyAdapter = new FastifyAdapter();
+  const fastifyAdapter = new FastifyAdapter({ logger: true });
   const fastify = fastifyAdapter.getInstance();
   fastify.addContentTypeParser(
     'multipart',
@@ -43,7 +43,7 @@ async function bootstrap() {
   );
   await app.register(fastifyStatic, {
     root: resolve(process.cwd(), 'uploads'), // 'public' 폴더 경로 설정
-    prefix: '/uploads/', // URL 접두사 (예: http://localhost:3000/public/images/example.jpg)
+    prefix: '/static/', // URL 접두사 (예: http://localhost:3000/public/images/example.jpg)
   });
   await app.listen(process.env.PORT);
 }

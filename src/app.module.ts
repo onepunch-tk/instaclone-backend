@@ -9,6 +9,7 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { GraphQLFormattedError } from 'graphql';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
+import { FollowModule } from './follow/follow.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     AuthModule,
     UserModule,
+    FollowModule,
   ],
   providers: [
     {

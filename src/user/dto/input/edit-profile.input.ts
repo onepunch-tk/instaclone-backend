@@ -4,7 +4,13 @@ import { FileUpload, GraphQLUpload } from 'graphql-upload';
 
 @InputType()
 export class EditProfileInput extends PartialType(
-  OmitType(User, ['createdAt', 'updatedAt', 'avatar'] as const),
+  OmitType(User, [
+    'createdAt',
+    'updatedAt',
+    'avatar',
+    'followedBy',
+    'following',
+  ] as const),
   InputType,
 ) {
   @Field(() => String, { nullable: true })

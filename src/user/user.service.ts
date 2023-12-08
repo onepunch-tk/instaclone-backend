@@ -12,9 +12,6 @@ import { createWriteStream } from 'fs';
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaRepository) {}
-  async getUser(): Promise<User> {
-    return this.prisma.user.findUnique({ where: { id: 1 } });
-  }
 
   async createAccount(
     createAccountData: CreateAccountInput,
@@ -33,16 +30,23 @@ export class UserService {
         throw new Error('This username/password is already taken.');
       }
       //hash password
-      createAccountData.password = await hash(createAccountData.password, 12);
+      const hashedPassword = await hash(createAccountData.password, 12);
+
+      // UserCreateArgs 타입에 맞게 데이터 변환
+      const userData = {
+        ...createAccountData,
+        password: hashedPassword,
+      };
+
+      // 함수, 심볼, undefined 값을 제거
+      const cleanedData = JSON.parse(JSON.stringify(userData));
 
       //save and return the user
       const createdUser = await this.prisma.user.create({
-        data: {
-          ...createAccountData,
-        },
+        data: cleanedData,
       });
       return {
-        data: { ...createdUser },
+        data: { ...createdUser, followedBy: [], following: [] },
       };
     } catch (e) {
       return {
@@ -62,20 +66,25 @@ export class UserService {
         editProfileData.password = await hash(editProfileData.password, 12);
       }
 
+      let avatar: string = '';
       if (editProfileData.avatar) {
-        /* local test */
         const { filename, createReadStream } = await editProfileData.avatar;
+        const uploadFileName = `${authUser.id}$${Date.now()}$${filename}`;
+        /* local test */
         const readStream = createReadStream();
         const writeStream = createWriteStream(
-          `${process.cwd()}/uploads/${filename}`,
+          `${process.cwd()}/uploads/${uploadFileName}`,
         );
         readStream.pipe(writeStream);
+        delete editProfileData.avatar;
+        avatar = `http://localhost:3000/static/${uploadFileName}`;
       }
 
       const updatedUser = await this.prisma.user.update({
         where: { id: authUser.id },
         data: {
-          // ...editProfileData,
+          ...editProfileData,
+          ...(avatar && { avatar }),
         },
       });
 
@@ -97,11 +106,15 @@ export class UserService {
     try {
       const findUser = await this.prisma.user.findUnique({
         where: { username },
+        include: {
+          following: true,
+          followedBy: true,
+        },
       });
       if (!findUser) {
         throw new Error('Not found User.');
       }
-
+      console.log(findUser);
       return {
         data: { ...findUser },
       };

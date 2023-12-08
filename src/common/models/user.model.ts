@@ -9,7 +9,7 @@ export class User {
   firstName: string;
 
   @Field(() => String, { nullable: true })
-  lastName: string;
+  lastName?: string;
 
   @Field(() => String)
   username: string;
@@ -18,14 +18,20 @@ export class User {
   email: string;
 
   @Field(() => String, { nullable: true })
-  bio: string;
+  bio?: string;
 
   @Field(() => String, { nullable: true })
-  avatar: string;
+  avatar?: string;
 
   @Field(() => Date, { nullable: true })
   createdAt: Date;
 
   @Field(() => Date, { nullable: true })
   updatedAt: Date;
+
+  @Field(() => [User], { nullable: true })
+  followedBy?: User[];
+
+  @Field(() => [User], { nullable: true })
+  following?: User[];
 }
