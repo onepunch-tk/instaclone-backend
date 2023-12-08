@@ -70,6 +70,19 @@ type SeeFollowResponse {
 
 type Query {
   seeProfile(username: String!): UserResponse!
+  seeFollow(seeFollowData: SeeFollowInput!): SeeFollowResponse!
+}
+
+input SeeFollowInput {
+  username: String!
+  afterId: Int
+  role: SeeFollowRole! = ALL_FOLLOW
+}
+
+enum SeeFollowRole {
+  FOLLOWED_BY
+  FOLLOWING
+  ALL_FOLLOW
 }
 
 type Mutation {
@@ -77,7 +90,6 @@ type Mutation {
   createAccount(createAccountData: CreateAccountInput!): UserResponse!
   editProfile(editProfileData: EditProfileInput!): EditProfileResponse!
   follow(followData: FollowInput!): FollowResponse!
-  seeFollow(seeFollowData: SeeFollowInput!): SeeFollowResponse!
 }
 
 input SignInInput {
@@ -117,16 +129,4 @@ input FollowInput {
 enum FollowRole {
   FOLLOW
   UN_FOLLOW
-}
-
-input SeeFollowInput {
-  username: String!
-  afterId: Int
-  role: SeeFollowRole! = ALL_FOLLOW
-}
-
-enum SeeFollowRole {
-  FOLLOWED_BY
-  FOLLOWING
-  ALL_FOLLOW
 }

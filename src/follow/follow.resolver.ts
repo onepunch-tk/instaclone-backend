@@ -4,6 +4,7 @@ import {
   Int,
   Mutation,
   Parent,
+  Query,
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
@@ -58,12 +59,11 @@ export class FollowResolver {
     return this.followService.follow(authUser, followData);
   }
 
-  @Mutation(() => SeeFollowResponse)
+  @Query(() => SeeFollowResponse)
   async seeFollow(
     @AuthUser() authUser: User,
     @Args('seeFollowData') seeFoll0wData: SeeFollowInput,
   ): Promise<SeeFollowResponse> {
-    console.log(authUser);
     return this.followService.seeFollow(seeFoll0wData);
   }
 }
