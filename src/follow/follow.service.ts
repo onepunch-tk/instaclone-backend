@@ -43,7 +43,7 @@ export class FollowService {
         },
       })
       .following({
-        take: 5,
+        take: 10,
         skip: afterId ? 1 : 0,
         ...(afterId && { cursor: { id: afterId } }),
       });

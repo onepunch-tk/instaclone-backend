@@ -6,7 +6,6 @@ class Error {
   @Field(() => String)
   message: string;
 }
-
 // ResponseType을 생성하는 고차 함수
 export function createResponseType<T>(TItem: Type<T>) {
   @ObjectType({ isAbstract: true })
@@ -14,10 +13,21 @@ export function createResponseType<T>(TItem: Type<T>) {
     @Field(() => Error, { nullable: true })
     errors?: Error;
 
-    @Field(() => (Array.isArray(TItem) ? [TItem[0]] : TItem), {
-      nullable: true,
-    })
+    @Field(() => TItem, { nullable: true })
     data?: T;
+  }
+
+  return ResponseType;
+}
+
+export function createArrayResponseType<T>(TItem: Type<T>) {
+  @ObjectType({ isAbstract: true })
+  abstract class ResponseType {
+    @Field(() => Error, { nullable: true })
+    errors?: Error;
+
+    @Field(() => [TItem], { nullable: true })
+    data?: T[];
   }
 
   return ResponseType;
