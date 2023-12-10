@@ -33,6 +33,7 @@
     "@nestjs/platform-fastify": "^10.2.10",
     "@node-rs/bcrypt": "^1.7.3",
     "@prisma/client": "5.6.0",
+    "aws-sdk": "^2.1515.0",
     "class-validator": "^0.14.0",
     "fastify": "^4.24.3",
     "graphql": "^16.8.1",

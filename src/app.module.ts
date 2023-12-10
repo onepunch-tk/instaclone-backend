@@ -10,6 +10,7 @@ import { GraphQLFormattedError } from 'graphql';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { FollowModule } from './follow/follow.module';
+import { S3Module } from './s3/s3.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { FollowModule } from './follow/follow.module';
     AuthModule,
     UserModule,
     FollowModule,
+    S3Module,
   ],
   providers: [
     {
