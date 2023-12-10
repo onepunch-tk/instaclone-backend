@@ -5,7 +5,7 @@ import { Hashtag } from './hashtag.model';
 @ObjectType()
 export class Photo {
   @Field(() => Int)
-  id: string;
+  id: number;
   @Field(() => User)
   user: User;
   @Field(() => String)
