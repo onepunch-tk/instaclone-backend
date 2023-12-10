@@ -1,6 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
 import { createResponseType } from '../../../common/types/graphql-reponse.type';
-import { SignedUrl } from 'src/common/models/signed-url.model';
+import { Photo } from '../../../common/models/photo.model';
 
 @ObjectType()
-export class SignedUrlResponse extends createResponseType(SignedUrl) {}
+export class PhotoResponse extends createResponseType(Photo) {}

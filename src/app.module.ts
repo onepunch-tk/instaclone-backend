@@ -11,6 +11,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { FollowModule } from './follow/follow.module';
 import { S3Module } from './s3/s3.module';
+import { PhotoModule } from './photo/photo.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { S3Module } from './s3/s3.module';
     UserModule,
     FollowModule,
     S3Module,
+    PhotoModule,
   ],
   providers: [
     {

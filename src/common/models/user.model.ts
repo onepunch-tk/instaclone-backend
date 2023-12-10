@@ -23,10 +23,10 @@ export class User {
   @Field(() => String, { nullable: true })
   avatar?: string;
 
-  @Field(() => Date, { nullable: true })
+  @Field(() => Date)
   createdAt: Date;
 
-  @Field(() => Date, { nullable: true })
+  @Field(() => Date)
   updatedAt: Date;
 
   @Field(() => [User], { nullable: true })

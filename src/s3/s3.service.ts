@@ -7,7 +7,7 @@ import { SignedUrlResponse } from './dto/response/signed-url.response';
 export class S3Service {
   private s3: AWS.S3;
   private MAX_FILE_SIZE = 2 * 1024 * 1024;
-  //Url 만료 시간 1시간
+  //SignedUrl 만료 시간 1시간
   private EXPIRES_IN_HOURS = 60 * 60;
   async getSignedUrl(
     signedUrlData: SignedUrlInput,

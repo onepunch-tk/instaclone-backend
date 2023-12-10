@@ -10,8 +10,8 @@ type User {
   email: String!
   bio: String
   avatar: String
-  createdAt: DateTime
-  updatedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
   followedBy: [User!]
   following: [User!]
 }
@@ -73,10 +73,43 @@ type SeeFollowResponse {
   data: Follow
 }
 
+type SignedUrl {
+  signedUrl: String!
+}
+
+type SignedUrlResponse {
+  errors: Error
+  data: SignedUrl
+}
+
+type Hashtag {
+  id: Int!
+  hashtag: String!
+  photos: [Photo!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Photo {
+  id: Int!
+  user: User!
+  file: String!
+  caption: String
+  hashtags: [Hashtag!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PhotoResponse {
+  errors: Error
+  data: Photo
+}
+
 type Query {
   seeProfile(username: String!, afterId: Int): UserResponse!
   seeUserList(userListData: UserListInput!): UserListResponse!
   seeFollow(seeFollowData: SeeFollowInput!): SeeFollowResponse!
+  getSignedUrl(signedUrlData: SignedUrlInput!): SignedUrlResponse!
 }
 
 input UserListInput {
@@ -96,11 +129,18 @@ enum SeeFollowRole {
   ALL_FOLLOW
 }
 
+input SignedUrlInput {
+  fileName: String!
+  contentType: String!
+  fileSize: Int!
+}
+
 type Mutation {
   signIn(signInData: SignInInput!): SignInResponse!
   createAccount(createAccountData: CreateAccountInput!): UserResponse!
   editProfile(editProfileData: EditProfileInput!): EditProfileResponse!
   follow(followData: FollowInput!): FollowResponse!
+  uploadPhoto(uploadPhotoData: UploadPhotoInput!): PhotoResponse!
 }
 
 input SignInInput {
@@ -140,4 +180,9 @@ input FollowInput {
 enum FollowRole {
   FOLLOW
   UN_FOLLOW
+}
+
+input UploadPhotoInput {
+  file: Upload!
+  caption: String
 }
