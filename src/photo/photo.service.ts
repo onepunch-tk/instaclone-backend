@@ -5,6 +5,11 @@ import { PhotoResponse } from './dto/response/photo.response';
 import { PrismaRepository } from '../repositories/prisma.repository';
 import { PhotoListInput } from './dto/input/photo-list.input';
 import { PhotoListResponse } from './dto/response/photo-list.resonse';
+import { EditPhotoInput } from './dto/input/edit-photo.input';
+import {
+  CreateOrConnectHashtag,
+  hashtagParse,
+} from './utils/hashtag-parse.util';
 
 @Injectable()
 export class PhotoService {
@@ -14,29 +19,14 @@ export class PhotoService {
     uploadPhotoData: UploadPhotoInput,
   ): Promise<PhotoResponse> {
     try {
-      let hashtagObj: {
-        where: { hashtag: string };
-        create: { hashtag: string };
-      }[];
+      let connectHashtags: CreateOrConnectHashtag[] = null;
       if (uploadPhotoData.caption) {
-        //parse caption
-        const hashtags = uploadPhotoData.caption.match(
-          /#[\w!@#$%^&*()_+\[\]\-={}]+/g,
-        );
-        hashtagObj = hashtags.map((hashtag) => ({
-          where: {
-            hashtag,
-          },
-          create: {
-            hashtag,
-          },
-        }));
+        console.log(uploadPhotoData.caption);
+        connectHashtags = hashtagParse(uploadPhotoData.caption);
+        console.log(connectHashtags);
       }
 
-      // save the photo with the parsed hashtags
-      // add the photo to the hashtags
-
-      let file: string = '';
+      const file: string = '';
       if (uploadPhotoData.file) {
         // const { filename, createReadStream } = await uploadPhotoData.file;
         // const uploadFileName = `${authUser.id}$${Date.now()}$${filename}`;
@@ -58,11 +48,11 @@ export class PhotoService {
               id: authUser.id,
             },
           },
-          ...(hashtagObj && {
-            hashtags: {
-              connectOrCreate: hashtagObj,
-            },
-          }),
+          hashtags: {
+            ...(connectHashtags && {
+              connectOrCreate: connectHashtags,
+            }),
+          },
         },
       });
       return {
@@ -114,7 +104,6 @@ export class PhotoService {
         skip: afterId ? 1 : 0,
         ...(afterId && { cursor: { id: afterId } }),
       });
-      console.log(photos);
       return {
         data: photos,
       };
@@ -125,6 +114,56 @@ export class PhotoService {
         },
       };
     }
+  }
+
+  async editPhoto(
+    authUser: User,
+    { id, caption }: EditPhotoInput,
+  ): Promise<PhotoResponse> {
+    try {
+      const findPhoto = await this.prisma.photo.findUnique({
+        where: {
+          id,
+          userId: authUser.id,
+        },
+        include: {
+          hashtags: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+      if (!findPhoto) {
+        throw new ForbiddenException('not found photo.');
+      }
+      const disconnectHashtags = findPhoto.hashtags.map((hashtag) => ({
+        id: hashtag.id, // 해시태그의 고유 ID를 사용
+      }));
+      const connectHashtags = hashtagParse(caption);
+      const updatedPhoto = await this.prisma.photo.update({
+        where: { id },
+        data: {
+          caption,
+          hashtags: {
+            ...(disconnectHashtags && { disconnect: disconnectHashtags }),
+            ...(connectHashtags && {
+              connectOrCreate: connectHashtags,
+            }),
+          },
+        },
+      });
+      return {
+        data: { ...updatedPhoto },
+      };
+    } catch (e) {
+      return {
+        errors: {
+          message: e.message,
+        },
+      };
+    }
+    return Promise.resolve(undefined);
   }
 
   async getUserOfPhoto(id: number) {

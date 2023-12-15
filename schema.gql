@@ -177,6 +177,7 @@ type Mutation {
   createAccount(createAccountData: CreateAccountInput!): UserResponse!
   editProfile(editProfileData: EditProfileInput!): EditProfileResponse!
   follow(followData: FollowInput!): FollowResponse!
+  editPhoto(editPhotoData: EditPhotoInput!): PhotoResponse!
   uploadPhoto(uploadPhotoData: UploadPhotoInput!): PhotoResponse!
 }
 
@@ -215,6 +216,11 @@ input FollowInput {
 enum FollowRole {
   FOLLOW
   UN_FOLLOW
+}
+
+input EditPhotoInput {
+  id: Int!
+  caption: String!
 }
 
 input UploadPhotoInput {

@@ -18,6 +18,7 @@ import { Photo } from '../common/models/photo.model';
 import { Hashtag } from '../common/models/hashtag.model';
 import { PhotoListResponse } from './dto/response/photo-list.resonse';
 import { PhotoListInput } from './dto/input/photo-list.input';
+import { EditPhotoInput } from './dto/input/edit-photo.input';
 
 @Roles(GuardRole.AUTH)
 @Resolver(() => Photo)
@@ -46,6 +47,14 @@ export class PhotoResolver {
     @Args('photoListData') photoListData: PhotoListInput,
   ) {
     return this.photoService.getPhotosByKeyword(photoListData);
+  }
+
+  @Mutation(() => PhotoResponse)
+  async editPhoto(
+    @AuthUser() authUser: User,
+    @Args('editPhotoData') editPhotoData: EditPhotoInput,
+  ) {
+    return this.photoService.editPhoto(authUser, editPhotoData);
   }
 
   @Mutation(() => PhotoResponse)
