@@ -1,10 +1,8 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
+import { PaginationInput } from '../../../common/graphql/input';
 
 @InputType()
-export class UserListInput {
+export class UserListInput extends PaginationInput {
   @Field(() => String)
   keyword: string;
-
-  @Field(() => Int, { nullable: true })
-  afterId?: number;
 }

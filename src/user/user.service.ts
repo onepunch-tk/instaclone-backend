@@ -132,6 +132,7 @@ export class UserService {
   async seeUserList({
     keyword,
     afterId,
+    pageSize,
   }: UserListInput): Promise<UserListResponse> {
     try {
       const userList = await this.prisma.user.findMany({
@@ -140,7 +141,7 @@ export class UserService {
             startsWith: keyword.toLowerCase(),
           },
         },
-        take: 10,
+        take: pageSize,
         skip: afterId ? 1 : 0,
         ...(afterId && { cursor: { id: afterId } }),
       });

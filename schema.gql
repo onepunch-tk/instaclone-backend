@@ -128,8 +128,9 @@ type Query {
 }
 
 input UserListInput {
-  keyword: String!
   afterId: Int
+  pageSize: Int!
+  keyword: String!
 }
 
 input SeeFollowInput {
