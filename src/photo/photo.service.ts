@@ -3,6 +3,8 @@ import { User } from '../common/models/user.model';
 import { UploadPhotoInput } from './dto/input/upload-photo.input';
 import { PhotoResponse } from './dto/response/photo.response';
 import { PrismaRepository } from '../repositories/prisma.repository';
+import { PhotoListInput } from './dto/input/photo-list.input';
+import { PhotoListResponse } from './dto/response/photo-list.resonse';
 
 @Injectable()
 export class PhotoService {
@@ -86,6 +88,35 @@ export class PhotoService {
       }
       return {
         data: { ...findPhoto },
+      };
+    } catch (e) {
+      return {
+        errors: {
+          message: e.message,
+        },
+      };
+    }
+  }
+
+  async getPhotosByKeyword({
+    keyword,
+    pageSize,
+    afterId,
+  }: PhotoListInput): Promise<PhotoListResponse> {
+    try {
+      const photos = await this.prisma.photo.findMany({
+        where: {
+          caption: {
+            startsWith: keyword,
+          },
+        },
+        take: pageSize,
+        skip: afterId ? 1 : 0,
+        ...(afterId && { cursor: { id: afterId } }),
+      });
+      console.log(photos);
+      return {
+        data: photos,
       };
     } catch (e) {
       return {

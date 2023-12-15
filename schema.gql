@@ -113,6 +113,11 @@ type PhotoResponse {
   data: Photo
 }
 
+type PhotoListResponse {
+  errors: Error
+  data: [Photo!]
+}
+
 type HashtagResponse {
   errors: Error
   data: Hashtag
@@ -124,6 +129,7 @@ type Query {
   seeFollow(seeFollowData: SeeFollowInput!): SeeFollowResponse!
   getSignedUrl(signedUrlData: SignedUrlInput!): SignedUrlResponse!
   seePhoto(seePhotoData: SeePhotoInput!): PhotoResponse!
+  getPhotosByKeyword(photoListData: PhotoListInput!): PhotoListResponse!
   seeHashtag(seeHashtagData: SeeHashtagInput!): HashtagResponse!
 }
 
@@ -154,6 +160,12 @@ input SignedUrlInput {
 
 input SeePhotoInput {
   id: Int!
+}
+
+input PhotoListInput {
+  afterId: Int
+  pageSize: Int!
+  keyword: String!
 }
 
 input SeeHashtagInput {

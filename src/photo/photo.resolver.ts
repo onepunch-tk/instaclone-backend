@@ -16,6 +16,8 @@ import { User } from '../common/models/user.model';
 import { SeePhotoInput } from './dto/input/see-photo.input';
 import { Photo } from '../common/models/photo.model';
 import { Hashtag } from '../common/models/hashtag.model';
+import { PhotoListResponse } from './dto/response/photo-list.resonse';
+import { PhotoListInput } from './dto/input/photo-list.input';
 
 @Roles(GuardRole.AUTH)
 @Resolver(() => Photo)
@@ -36,6 +38,14 @@ export class PhotoResolver {
   @Query(() => PhotoResponse)
   async seePhoto(@Args('seePhotoData') { id: photoId }: SeePhotoInput) {
     return this.photoService.seePhoto(photoId);
+  }
+
+  @Roles(GuardRole.PUBLIC)
+  @Query(() => PhotoListResponse)
+  async getPhotosByKeyword(
+    @Args('photoListData') photoListData: PhotoListInput,
+  ) {
+    return this.photoService.getPhotosByKeyword(photoListData);
   }
 
   @Mutation(() => PhotoResponse)
