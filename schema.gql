@@ -85,14 +85,21 @@ type SignedUrlResponse {
 type Hashtag {
   id: Int!
   hashtag: String!
-  photos: [Photo!]
+  photos(photoPaginationData: PhotoPaginationInput!): [Photo!]
   createdAt: DateTime!
   updatedAt: DateTime!
+  totalPhotos: Int!
+}
+
+input PhotoPaginationInput {
+  afterId: Int
+  pageSize: Int!
 }
 
 type Photo {
   id: Int!
   user: User!
+  userId: Int!
   file: String!
   caption: String
   hashtags: [Hashtag!]
@@ -105,11 +112,18 @@ type PhotoResponse {
   data: Photo
 }
 
+type HashtagResponse {
+  errors: Error
+  data: Hashtag
+}
+
 type Query {
   seeProfile(username: String!, afterId: Int): UserResponse!
   seeUserList(userListData: UserListInput!): UserListResponse!
   seeFollow(seeFollowData: SeeFollowInput!): SeeFollowResponse!
   getSignedUrl(signedUrlData: SignedUrlInput!): SignedUrlResponse!
+  seePhoto(seePhotoData: SeePhotoInput!): PhotoResponse!
+  seeHashtag(seeHashtagData: SeeHashtagInput!): HashtagResponse!
 }
 
 input UserListInput {
@@ -133,6 +147,15 @@ input SignedUrlInput {
   fileName: String!
   contentType: String!
   fileSize: Int!
+}
+
+input SeePhotoInput {
+  id: Int!
+}
+
+input SeeHashtagInput {
+  hashtag: String!
+  afterId: Int!
 }
 
 type Mutation {

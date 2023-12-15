@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { FollowModule } from './follow/follow.module';
 import { S3Module } from './s3/s3.module';
 import { PhotoModule } from './photo/photo.module';
+import { HashtagModule } from './hashtag/hashtag.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -52,6 +53,7 @@ import * as Joi from 'joi';
     FollowModule,
     S3Module,
     PhotoModule,
+    HashtagModule,
   ],
   providers: [
     {

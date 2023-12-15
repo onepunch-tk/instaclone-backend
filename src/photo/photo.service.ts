@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { User } from '../common/models/user.model';
 import { UploadPhotoInput } from './dto/input/upload-photo.input';
 import { PhotoResponse } from './dto/response/photo.response';
@@ -62,9 +62,6 @@ export class PhotoService {
             },
           }),
         },
-        include: {
-          user: true,
-        },
       });
       return {
         data: { ...createdPhoto },
@@ -76,5 +73,42 @@ export class PhotoService {
         },
       };
     }
+  }
+
+  async seePhoto(photoId: number): Promise<PhotoResponse> {
+    try {
+      const findPhoto = await this.prisma.photo.findUnique({
+        where: { id: photoId },
+      });
+
+      if (!findPhoto) {
+        throw new ForbiddenException(`not found photo by photoId:${photoId}`);
+      }
+      return {
+        data: { ...findPhoto },
+      };
+    } catch (e) {
+      return {
+        errors: {
+          message: e.message,
+        },
+      };
+    }
+  }
+
+  async getUserOfPhoto(id: number) {
+    return this.prisma.user.findUnique({ where: { id } });
+  }
+
+  getHashtagsByPhotoId(photoId: number) {
+    return this.prisma.hashtag.findMany({
+      where: {
+        photos: {
+          some: {
+            id: photoId,
+          },
+        },
+      },
+    });
   }
 }

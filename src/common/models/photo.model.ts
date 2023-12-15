@@ -7,7 +7,9 @@ export class Photo {
   @Field(() => Int)
   id: number;
   @Field(() => User)
-  user: User;
+  user?: User;
+  @Field(() => Int)
+  userId: number;
   @Field(() => String)
   file: string;
   @Field(() => String, { nullable: true })

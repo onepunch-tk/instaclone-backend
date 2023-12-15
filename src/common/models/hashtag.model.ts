@@ -4,7 +4,7 @@ import { Photo } from './photo.model';
 @ObjectType()
 export class Hashtag {
   @Field(() => Int)
-  id: string;
+  id: number;
   @Field(() => String)
   hashtag: string;
   @Field(() => [Photo], { nullable: true, defaultValue: [] })
@@ -13,4 +13,6 @@ export class Hashtag {
   createdAt: Date;
   @Field(() => Date)
   updatedAt: Date;
+  @Field(() => Int)
+  totalPhotos?: number;
 }
