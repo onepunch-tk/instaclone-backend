@@ -2,6 +2,36 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Hashtag {
+  id: Int!
+  hashtag: String!
+  photos(photoPaginationData: PaginationInput!): [Photo!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  totalPhotos: Int!
+}
+
+input PaginationInput {
+  afterId: Int
+  pageSize: Int!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Photo {
+  id: Int!
+  user: User!
+  userId: Int!
+  file: String!
+  caption: String
+  hashtags: [Hashtag!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type User {
   id: Int!
   firstName: String!
@@ -14,12 +44,8 @@ type User {
   updatedAt: DateTime!
   followedBy: [User!]
   following: [User!]
+  photos(photoPaginationData: PaginationInput!): [Photo!]
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Error {
   message: String!
@@ -80,31 +106,6 @@ type SignedUrl {
 type SignedUrlResponse {
   errors: Error
   data: SignedUrl
-}
-
-type Hashtag {
-  id: Int!
-  hashtag: String!
-  photos(photoPaginationData: PaginationInput!): [Photo!]
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  totalPhotos: Int!
-}
-
-input PaginationInput {
-  afterId: Int
-  pageSize: Int!
-}
-
-type Photo {
-  id: Int!
-  user: User!
-  userId: Int!
-  file: String!
-  caption: String
-  hashtags: [Hashtag!]
-  createdAt: DateTime!
-  updatedAt: DateTime!
 }
 
 type PhotoResponse {
@@ -177,12 +178,10 @@ input CreateAccountInput {
   username: String!
   email: String!
   bio: String
-  avatar: String
   password: String!
 }
 
 input EditProfileInput {
-  id: Int
   firstName: String
   lastName: String
   username: String

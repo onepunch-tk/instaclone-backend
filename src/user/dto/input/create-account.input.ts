@@ -1,10 +1,10 @@
-import { Field, InputType, OmitType } from '@nestjs/graphql';
+import { Field, InputType, PickType } from '@nestjs/graphql';
 import { User } from '../../../common/models/user.model';
 
 @InputType()
-export class CreateAccountInput extends OmitType(
+export class CreateAccountInput extends PickType(
   User,
-  ['id', 'createdAt', 'updatedAt', 'followedBy', 'following'] as const,
+  ['firstName', 'lastName', 'username', 'email', 'bio'] as const,
   InputType,
 ) {
   @Field(() => String)

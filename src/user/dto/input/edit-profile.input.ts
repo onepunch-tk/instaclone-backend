@@ -1,15 +1,15 @@
-import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
+import { Field, InputType, PartialType, PickType } from '@nestjs/graphql';
 import { User } from '../../../common/models/user.model';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 
 @InputType()
 export class EditProfileInput extends PartialType(
-  OmitType(User, [
-    'createdAt',
-    'updatedAt',
-    'avatar',
-    'followedBy',
-    'following',
+  PickType(User, [
+    'firstName',
+    'lastName',
+    'username',
+    'email',
+    'bio',
   ] as const),
   InputType,
 ) {

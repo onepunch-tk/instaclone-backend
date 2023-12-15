@@ -10,6 +10,7 @@ import { EditProfileResponse } from './dto/reponse/edit-profile.response';
 import { createWriteStream } from 'fs';
 import { UserListResponse } from './dto/reponse/user-list.response';
 import { UserListInput } from './dto/input/user-list.input';
+import { PaginationInput } from '../common/graphql/input';
 
 @Injectable()
 export class UserService {
@@ -116,7 +117,6 @@ export class UserService {
       if (!findUser) {
         throw new Error('Not found User.');
       }
-      console.log(findUser);
       return {
         data: { ...findUser },
       };
@@ -155,5 +155,16 @@ export class UserService {
         },
       };
     }
+  }
+
+  async getPhotos(userId: number, { afterId, pageSize }: PaginationInput) {
+    return this.prisma.photo.findMany({
+      where: {
+        userId,
+      },
+      take: pageSize,
+      skip: afterId ? 1 : 0,
+      ...(afterId && { cursor: { id: afterId } }),
+    });
   }
 }

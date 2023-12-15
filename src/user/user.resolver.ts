@@ -1,4 +1,11 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { CreateAccountInput } from './dto/input/create-account.input';
 import { UserResponse } from './dto/reponse/user.response';
@@ -11,11 +18,22 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { GuardRole } from '../constants/role.enum';
 import { UserListResponse } from './dto/reponse/user-list.response';
 import { UserListInput } from './dto/input/user-list.input';
+import { Photo } from '../common/models/photo.model';
+import { PaginationInput } from '../common/graphql/input';
+import { Hashtag } from '../common/models/hashtag.model';
 
 @Roles(GuardRole.PUBLIC)
 @Resolver(() => User)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
+
+  @ResolveField(() => [Photo])
+  async photos(
+    @Parent() { id }: Hashtag,
+    @Args('photoPaginationData') photoPaginationData: PaginationInput,
+  ) {
+    return this.userService.getPhotos(id, photoPaginationData);
+  }
 
   @Query(() => UserResponse)
   async seeProfile(@Args() searchArgs: SearchByUsernameArgs) {
