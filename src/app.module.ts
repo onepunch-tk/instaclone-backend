@@ -12,11 +12,21 @@ import { AuthModule } from './auth/auth.module';
 import { FollowModule } from './follow/follow.module';
 import { S3Module } from './s3/s3.module';
 import { PhotoModule } from './photo/photo.module';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      validationSchema: Joi.object({
+        DATABASE_URL: Joi.string().required(),
+        PORT: Joi.number().port(),
+        SECRET_KEY: Joi.string().required(),
+        AWS_ACCESS_KEY_ID: Joi.string().required(),
+        AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+        AWS_REGION: Joi.string().required(),
+        AWS_BUCKET_NAME: Joi.string().required(),
+      }),
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
