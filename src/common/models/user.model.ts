@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Photo } from './photo.model';
 
 @ObjectType()
 export class User {
@@ -34,4 +35,7 @@ export class User {
 
   @Field(() => [User], { nullable: true })
   following?: User[];
+
+  @Field(() => [Photo], { nullable: true, defaultValue: [] })
+  photos?: Photo[];
 }
