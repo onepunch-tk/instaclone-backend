@@ -1,5 +1,6 @@
-import { Field, InputType, Int, registerEnumType } from '@nestjs/graphql';
+import { Field, InputType, registerEnumType } from '@nestjs/graphql';
 import { SeeFollowRole } from '../../../constants/role.enum';
+import { PaginationInput } from '../../../common/graphql/input';
 
 // FollowRole enum을 GraphQL에 등록
 registerEnumType(SeeFollowRole, {
@@ -7,12 +8,9 @@ registerEnumType(SeeFollowRole, {
 });
 
 @InputType()
-export class SeeFollowInput {
+export class SeeFollowInput extends PaginationInput {
   @Field(() => String)
   username: string;
-
-  @Field(() => Int, { nullable: true })
-  afterId?: number;
 
   @Field(() => SeeFollowRole, {
     nullable: false,

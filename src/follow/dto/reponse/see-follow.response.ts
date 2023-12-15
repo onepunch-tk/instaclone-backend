@@ -1,6 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
-import { createResponseType } from '../../../common/types/graphql-reponse.type';
+import { createResponse } from '../../../common/graphql/response';
 import { Follow } from 'src/common/models/follow.model';
 
 @ObjectType()
-export class SeeFollowResponse extends createResponseType(Follow) {}
+export class SeeFollowResponse extends createResponse(Follow) {}

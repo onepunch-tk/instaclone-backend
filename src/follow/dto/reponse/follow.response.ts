@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { createResponseType } from '../../../common/types/graphql-reponse.type';
+import { createResponse } from '../../../common/graphql/response';
 
 @ObjectType()
 class Success {
@@ -7,4 +7,4 @@ class Success {
   success?: boolean;
 }
 @ObjectType()
-export class FollowResponse extends createResponseType(Success) {}
+export class FollowResponse extends createResponse(Success) {}

@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { createResponseType } from '../../../common/types/graphql-reponse.type';
+import { createResponse } from '../../../common/graphql/response';
 
 @ObjectType()
 class Token {
@@ -8,4 +8,4 @@ class Token {
 }
 
 @ObjectType()
-export class SignInResponse extends createResponseType(Token) {}
+export class SignInResponse extends createResponse(Token) {}

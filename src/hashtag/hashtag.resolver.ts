@@ -13,7 +13,7 @@ import { Hashtag } from '../common/models/hashtag.model';
 import { HashtagResponse } from './dto/response/hashtag.response';
 import { SeeHashtagInput } from './dto/input/see-hashtag.input';
 import { Photo } from '../common/models/photo.model';
-import { PhotoPaginationInput } from './dto/input/photo-pagenation.input';
+import { PaginationInput } from '../common/graphql/input';
 
 @Roles(GuardRole.PUBLIC)
 @Resolver(() => Hashtag)
@@ -28,7 +28,7 @@ export class HashtagResolver {
   @ResolveField(() => [Photo])
   async photos(
     @Parent() { id }: Hashtag,
-    @Args('photoPaginationData') photoPaginationData: PhotoPaginationInput,
+    @Args('photoPaginationData') photoPaginationData: PaginationInput,
   ) {
     return this.hashtagService.getPhotos(id, photoPaginationData);
   }

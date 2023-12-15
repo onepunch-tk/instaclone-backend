@@ -1,6 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
-import { createResponseType } from '../../../common/types/graphql-reponse.type';
+import { createResponse } from '../../../common/graphql/response';
 import { Photo } from '../../../common/models/photo.model';
 
 @ObjectType()
-export class PhotoResponse extends createResponseType(Photo) {}
+export class PhotoResponse extends createResponse(Photo) {}

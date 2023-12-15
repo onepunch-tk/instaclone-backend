@@ -31,6 +31,7 @@ export class PhotoResolver {
   async hashtags(@Parent() { id: photoId }: Photo) {
     return this.photoService.getHashtagsByPhotoId(photoId);
   }
+
   @Roles(GuardRole.PUBLIC)
   @Query(() => PhotoResponse)
   async seePhoto(@Args('seePhotoData') { id: photoId }: SeePhotoInput) {

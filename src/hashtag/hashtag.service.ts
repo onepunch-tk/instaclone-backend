@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaRepository } from '../repositories/prisma.repository';
 import { HashtagResponse } from './dto/response/hashtag.response';
 import { SeeHashtagInput } from './dto/input/see-hashtag.input';
-import { PhotoPaginationInput } from './dto/input/photo-pagenation.input';
+import { PaginationInput } from '../common/graphql/input';
 
 @Injectable()
 export class HashtagService {
@@ -39,7 +39,7 @@ export class HashtagService {
     });
   }
 
-  async getPhotos(id: number, { afterId, pageSize }: PhotoPaginationInput) {
+  async getPhotos(id: number, { afterId, pageSize }: PaginationInput) {
     return this.prisma.photo.findMany({
       where: {
         hashtags: { some: { id } },

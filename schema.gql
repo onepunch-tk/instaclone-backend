@@ -85,13 +85,13 @@ type SignedUrlResponse {
 type Hashtag {
   id: Int!
   hashtag: String!
-  photos(photoPaginationData: PhotoPaginationInput!): [Photo!]
+  photos(photoPaginationData: PaginationInput!): [Photo!]
   createdAt: DateTime!
   updatedAt: DateTime!
   totalPhotos: Int!
 }
 
-input PhotoPaginationInput {
+input PaginationInput {
   afterId: Int
   pageSize: Int!
 }
@@ -132,8 +132,9 @@ input UserListInput {
 }
 
 input SeeFollowInput {
-  username: String!
   afterId: Int
+  pageSize: Int!
+  username: String!
   role: SeeFollowRole! = ALL_FOLLOW
 }
 
@@ -155,7 +156,6 @@ input SeePhotoInput {
 
 input SeeHashtagInput {
   hashtag: String!
-  afterId: Int!
 }
 
 type Mutation {
