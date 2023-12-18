@@ -24,4 +24,6 @@ export class Photo {
   updatedAt: Date;
   @Field(() => Int, { nullable: true })
   likes?: number;
+  @Field(() => Int, { nullable: true })
+  comments?: number;
 }

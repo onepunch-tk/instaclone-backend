@@ -51,6 +51,11 @@ export class PhotoResolver {
     return this.photoService.getLikes(photoId);
   }
 
+  @ResolveField(() => Int)
+  async comments(@Parent() { id: photoId }: Photo) {
+    return this.photoService.getComments(photoId);
+  }
+
   @Query(() => PhotoResponse)
   async getPhotoById(@Args('getPhotoData') { id: photoId }: GetPhotoInput) {
     return this.photoService.getPhotoById(photoId);

@@ -197,30 +197,6 @@ export class PhotoService {
     }
   }
 
-  async getUserOfPhoto(id: number) {
-    return this.prisma.user.findUnique({ where: { id } });
-  }
-
-  async getHashtagsByPhotoId(photoId: number) {
-    return this.prisma.hashtag.findMany({
-      where: {
-        photos: {
-          some: {
-            id: photoId,
-          },
-        },
-      },
-    });
-  }
-
-  async getLikes(photoId: number) {
-    return this.prisma.like.count({
-      where: {
-        photoId,
-      },
-    });
-  }
-
   async getFeeds(
     authUser: User,
     { afterId, pageSize }: PaginationInput,
@@ -260,5 +236,37 @@ export class PhotoService {
         },
       };
     }
+  }
+
+  async getUserOfPhoto(id: number) {
+    return this.prisma.user.findUnique({ where: { id } });
+  }
+
+  async getHashtagsByPhotoId(photoId: number) {
+    return this.prisma.hashtag.findMany({
+      where: {
+        photos: {
+          some: {
+            id: photoId,
+          },
+        },
+      },
+    });
+  }
+
+  async getLikes(photoId: number) {
+    return this.prisma.like.count({
+      where: {
+        photoId,
+      },
+    });
+  }
+
+  async getComments(photoId: number) {
+    return this.prisma.comment.count({
+      where: {
+        photoId,
+      },
+    });
   }
 }

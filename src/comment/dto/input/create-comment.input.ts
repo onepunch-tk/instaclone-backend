@@ -1,5 +1,5 @@
 import { Field, InputType, Int, PickType } from '@nestjs/graphql';
-import { Comment } from '../../../common/models/comment';
+import { Comment } from '../../../common/models/comment.model';
 
 @InputType()
 export class CreateCommentInput extends PickType(

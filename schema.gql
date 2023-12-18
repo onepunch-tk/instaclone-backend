@@ -32,6 +32,7 @@ type Photo {
   createdAt: DateTime!
   updatedAt: DateTime!
   likes: Int
+  comments: Int
 }
 
 type User {
@@ -142,9 +143,23 @@ type LikeOnPhotoResponse {
   data: Success
 }
 
+type Comment {
+  id: Int!
+  userId: Int!
+  payload: String!
+  createdAt: DateTime!
+  isMine: Boolean
+  updatedAt: DateTime!
+}
+
 type CreateCommentResponse {
   errors: Error
   data: Success
+}
+
+type GetCommentsResponse {
+  errors: Error
+  data: [Comment!]
 }
 
 type Query {
@@ -157,6 +172,7 @@ type Query {
   getPhotosByKeyword(photoListData: GetPhotoListInput!): PhotoListResponse!
   getFeeds(paginationData: PaginationInput!): PhotoListResponse!
   getHashtag(getHashtagData: GetHashtagInput!): HashtagResponse!
+  getCommentsByPhotoId(getCommentsData: GetCommentsInput!): GetCommentsResponse!
 }
 
 input GetUserInput {
@@ -201,6 +217,12 @@ input GetPhotoListInput {
 
 input GetHashtagInput {
   hashtag: String!
+}
+
+input GetCommentsInput {
+  afterId: Int
+  pageSize: Int!
+  photoId: Int!
 }
 
 type Mutation {
