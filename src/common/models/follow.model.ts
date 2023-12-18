@@ -12,9 +12,4 @@ export class Follow extends PickType(User, [
 
   @Field(() => Int, { nullable: true })
   followingCount?: number;
-  @Field(() => Boolean, { nullable: true, defaultValue: false })
-  isMe?: boolean;
-
-  @Field(() => Boolean, { nullable: true, defaultValue: false })
-  isFollowing?: boolean;
 }

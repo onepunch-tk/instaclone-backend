@@ -21,6 +21,7 @@ import { PhotoListResponse } from './dto/response/photo-list.resonse';
 import { GetPhotoListInput } from './dto/input/get-photo-list.input';
 import { EditPhotoInput } from './dto/input/edit-photo.input';
 import { PhotoLikesUserListResponse } from './dto/response/photo-likes-user-list.response';
+import { PaginationInput } from '../common/dto/input';
 
 @Roles(GuardRole.PUBLIC)
 @Resolver(() => Photo)
@@ -59,6 +60,15 @@ export class PhotoResolver {
     @Args('photoListData') photoListData: GetPhotoListInput,
   ) {
     return this.photoService.getPhotosByKeyword(photoListData);
+  }
+
+  @Roles(GuardRole.AUTH)
+  @Query(() => PhotoListResponse)
+  async getFeeds(
+    @AuthUser() authUser: User,
+    @Args('paginationData') paginationData: PaginationInput,
+  ) {
+    return this.photoService.getFeeds(authUser, paginationData);
   }
 
   @Roles(GuardRole.AUTH)

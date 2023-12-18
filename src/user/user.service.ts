@@ -10,7 +10,7 @@ import { EditProfileResponse } from './dto/reponse/edit-profile.response';
 import { createWriteStream } from 'fs';
 import { UserListResponse } from './dto/reponse/user-list.response';
 import { GetUserListInput } from './dto/input/get-user-list.input';
-import { PaginationInput } from '../common/graphql/input';
+import { PaginationInput } from '../common/dto/input';
 
 @Injectable()
 export class UserService {
@@ -167,5 +167,12 @@ export class UserService {
       skip: afterId ? 1 : 0,
       ...(afterId && { cursor: { id: afterId } }),
     });
+  }
+
+  async getIsFollowing(followingId: number, id: number) {
+    const exists = await this.prisma.user
+      .findUnique({ where: { id } })
+      .following({ where: { id: followingId } });
+    return exists.length !== 0;
   }
 }

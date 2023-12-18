@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   Mutation,
   Parent,
   Query,
@@ -19,8 +20,8 @@ import { GuardRole } from '../constants/role.enum';
 import { UserListResponse } from './dto/reponse/user-list.response';
 import { GetUserListInput } from './dto/input/get-user-list.input';
 import { Photo } from '../common/models/photo.model';
-import { PaginationInput } from '../common/graphql/input';
 import { Hashtag } from '../common/models/hashtag.model';
+import { PaginationInput } from '../common/dto/input';
 
 @Roles(GuardRole.PUBLIC)
 @Resolver(() => User)
@@ -30,9 +31,24 @@ export class UserResolver {
   @ResolveField(() => [Photo])
   async photos(
     @Parent() { id }: Hashtag,
-    @Args('photoPaginationData') photoPaginationData: PaginationInput,
+    @Args('paginationData') paginationData: PaginationInput,
   ) {
-    return this.userService.getPhotos(id, photoPaginationData);
+    return this.userService.getPhotos(id, paginationData);
+  }
+
+  @ResolveField(() => Boolean)
+  async isMe(@Parent() { id }: User, @Context() ctx: any) {
+    const authUser = ctx.authUser;
+    if (!authUser) return false;
+    return id === authUser.id;
+  }
+
+  @ResolveField(() => Boolean)
+  async isFollowing(@Parent() { id }, @Context() ctx: any) {
+    const authUser = ctx.authUser;
+    if (!authUser) return false;
+
+    return this.userService.getIsFollowing(id, authUser.id);
   }
 
   @Query(() => UserResponse)

@@ -38,4 +38,10 @@ export class User {
 
   @Field(() => [Photo], { nullable: true, defaultValue: [] })
   photos?: Photo[];
+
+  @Field(() => Boolean, { nullable: true, defaultValue: false })
+  isMe?: boolean;
+
+  @Field(() => Boolean, { nullable: true, defaultValue: false })
+  isFollowing?: boolean;
 }

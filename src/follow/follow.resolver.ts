@@ -24,30 +24,21 @@ import { GuardRole } from '../constants/role.enum';
 export class FollowResolver {
   constructor(private readonly followService: FollowService) {}
 
-  @ResolveField(() => Int, { name: 'followedByCount' })
-  async getFollowedByCount(@Parent() { id }: Follow) {
+  @ResolveField(() => Int)
+  async followedByCount(@Parent() { id }) {
     return this.followService.followedByCount(id);
   }
 
-  @ResolveField(() => Int, { name: 'followingCount' })
-  async getFollowingCount(@Parent() { id }: Follow) {
+  @ResolveField(() => Int)
+  async followingCount(@Parent() { id }) {
     return this.followService.followingCount(id);
   }
 
-  @ResolveField(() => Boolean, { name: 'isMe' })
-  async getIsMe(@Parent() { id }: Follow, @Context() ctx: any) {
+  @ResolveField(() => Boolean)
+  async isMe(@Parent() { id }: User, @Context() ctx: any) {
     const authUser = ctx.authUser;
     if (!authUser) return false;
-
     return id === authUser.id;
-  }
-
-  @ResolveField(() => Boolean, { name: 'isFollowing' })
-  async getIsFollowing(@Parent() { id }: Follow, @Context() ctx: any) {
-    const authUser = ctx.authUser;
-    if (!authUser) return false;
-
-    return this.followService.getIsFollowing(id, authUser.id);
   }
 
   @Roles(GuardRole.AUTH)

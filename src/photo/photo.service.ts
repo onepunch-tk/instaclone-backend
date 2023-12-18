@@ -11,6 +11,7 @@ import {
   hashtagParse,
 } from './utils/hashtag-parse.util';
 import { PhotoLikesUserListResponse } from './dto/response/photo-likes-user-list.response';
+import { PaginationInput } from '../common/dto/input';
 
 @Injectable()
 export class PhotoService {
@@ -218,5 +219,46 @@ export class PhotoService {
         photoId,
       },
     });
+  }
+
+  async getFeeds(
+    authUser: User,
+    { afterId, pageSize }: PaginationInput,
+  ): Promise<PhotoListResponse> {
+    try {
+      const findFeeds = await this.prisma.photo.findMany({
+        take: pageSize,
+        skip: afterId ? 1 : 0,
+        ...(afterId && { cursor: { id: afterId } }),
+        where: {
+          OR: [
+            {
+              user: {
+                followedBy: {
+                  some: {
+                    id: authUser.id,
+                  },
+                },
+              },
+            },
+            {
+              userId: authUser.id,
+            },
+          ],
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+      return {
+        data: findFeeds,
+      };
+    } catch (e) {
+      return {
+        errors: {
+          message: e.message,
+        },
+      };
+    }
   }
 }

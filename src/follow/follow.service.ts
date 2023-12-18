@@ -97,13 +97,6 @@ export class FollowService {
     }
   }
 
-  async getIsFollowing(followingId: number, id: number) {
-    const exists = await this.prisma.user
-      .findUnique({ where: { id } })
-      .following({ where: { id: followingId } });
-    return exists.length !== 0;
-  }
-
   async followedBy(searchId: number, afterId: number, pageSize: number) {
     return this.prisma.user
       .findUnique({

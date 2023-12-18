@@ -5,7 +5,7 @@
 type Hashtag {
   id: Int!
   hashtag: String!
-  photos(photoPaginationData: PaginationInput!): [Photo!]
+  photos(paginationData: PaginationInput!): [Photo!]
   createdAt: DateTime!
   updatedAt: DateTime!
   totalPhotos: Int!
@@ -45,7 +45,9 @@ type User {
   updatedAt: DateTime!
   followedBy: [User!]
   following: [User!]
-  photos(photoPaginationData: PaginationInput!): [Photo!]
+  photos(paginationData: PaginationInput!): [Photo!]
+  isMe: Boolean
+  isFollowing: Boolean
 }
 
 type Error {
@@ -89,10 +91,9 @@ type Follow {
   id: Int!
   followedBy: [User!]
   following: [User!]
-  followedByCount: Int!
-  followingCount: Int!
+  followedByCount: Int
+  followingCount: Int
   isMe: Boolean!
-  isFollowing: Boolean!
 }
 
 type GetFollowResponse {
@@ -148,6 +149,7 @@ type Query {
   getPhotoById(getPhotoData: GetPhotoInput!): PhotoResponse!
   getPhotoLikesUsers(getPhotoData: GetPhotoInput!): PhotoLikesUserListResponse!
   getPhotosByKeyword(photoListData: GetPhotoListInput!): PhotoListResponse!
+  getFeeds(paginationData: PaginationInput!): PhotoListResponse!
   getHashtag(getHashtagData: GetHashtagInput!): HashtagResponse!
 }
 
