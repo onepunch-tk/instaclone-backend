@@ -94,7 +94,7 @@ type Follow {
   isFollowing: Boolean!
 }
 
-type SeeFollowResponse {
+type GetFollowResponse {
   errors: Error
   data: Follow
 }
@@ -124,22 +124,26 @@ type HashtagResponse {
 }
 
 type Query {
-  seeProfile(username: String!, afterId: Int): UserResponse!
-  seeUserList(userListData: UserListInput!): UserListResponse!
-  seeFollow(seeFollowData: SeeFollowInput!): SeeFollowResponse!
+  getProfile(getUserData: GetUserInput!): UserResponse!
+  getUserList(userListData: GetUserListInput!): UserListResponse!
+  getFollow(getFollowData: GetFollowInput!): GetFollowResponse!
   getSignedUrl(signedUrlData: SignedUrlInput!): SignedUrlResponse!
-  seePhoto(seePhotoData: SeePhotoInput!): PhotoResponse!
-  getPhotosByKeyword(photoListData: PhotoListInput!): PhotoListResponse!
-  seeHashtag(seeHashtagData: SeeHashtagInput!): HashtagResponse!
+  getPhotoById(getPhotoData: GetPhotoInput!): PhotoResponse!
+  getPhotosByKeyword(photoListData: GetPhotoListInput!): PhotoListResponse!
+  getHashtag(getHashtagData: GetHashtagInput!): HashtagResponse!
 }
 
-input UserListInput {
+input GetUserInput {
+  username: String!
+}
+
+input GetUserListInput {
   afterId: Int
   pageSize: Int!
   keyword: String!
 }
 
-input SeeFollowInput {
+input GetFollowInput {
   afterId: Int
   pageSize: Int!
   username: String!
@@ -150,6 +154,7 @@ enum SeeFollowRole {
   FOLLOWED_BY
   FOLLOWING
   ALL_FOLLOW
+  UN_FOLLOW
 }
 
 input SignedUrlInput {
@@ -158,17 +163,17 @@ input SignedUrlInput {
   fileSize: Int!
 }
 
-input SeePhotoInput {
+input GetPhotoInput {
   id: Int!
 }
 
-input PhotoListInput {
+input GetPhotoListInput {
   afterId: Int
   pageSize: Int!
   keyword: String!
 }
 
-input SeeHashtagInput {
+input GetHashtagInput {
   hashtag: String!
 }
 
@@ -210,12 +215,7 @@ scalar Upload
 
 input FollowInput {
   username: String!
-  role: FollowRole!
-}
-
-enum FollowRole {
-  FOLLOW
-  UN_FOLLOW
+  role: SeeFollowRole!
 }
 
 input EditPhotoInput {
