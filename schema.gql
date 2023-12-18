@@ -28,6 +28,7 @@ type Photo {
   file: String!
   caption: String
   hashtags: [Hashtag!]
+  isMine: Boolean
   createdAt: DateTime!
   updatedAt: DateTime!
   likes: Int
@@ -141,6 +142,11 @@ type LikeOnPhotoResponse {
   data: Success
 }
 
+type CreateCommentResponse {
+  errors: Error
+  data: Success
+}
+
 type Query {
   getProfile(getUserData: GetUserInput!): UserResponse!
   getUserList(userListData: GetUserListInput!): UserListResponse!
@@ -205,6 +211,7 @@ type Mutation {
   editPhoto(editPhotoData: EditPhotoInput!): PhotoResponse!
   uploadPhoto(uploadPhotoData: UploadPhotoInput!): PhotoResponse!
   likeOnPhoto(likeOnPhotoData: LikeOnPhotoInput!): LikeOnPhotoResponse!
+  createComment(createCommentData: CreateCommentInput!): CreateCommentResponse!
 }
 
 input SignInInput {
@@ -251,4 +258,9 @@ input UploadPhotoInput {
 
 input LikeOnPhotoInput {
   id: Int!
+}
+
+input CreateCommentInput {
+  payload: String!
+  photoId: Int!
 }

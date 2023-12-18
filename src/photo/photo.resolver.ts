@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   Int,
   Mutation,
   Parent,
@@ -36,6 +37,13 @@ export class PhotoResolver {
   @ResolveField(() => [Hashtag])
   async hashtags(@Parent() { id: photoId }: Photo) {
     return this.photoService.getHashtagsByPhotoId(photoId);
+  }
+
+  @ResolveField(() => [Hashtag])
+  async isMine(@Parent() { userId }: Photo, @Context() ctx: any) {
+    const authUser = ctx.authUser;
+    if (!authUser) return false;
+    return userId === authUser.id;
   }
 
   @ResolveField(() => Int)

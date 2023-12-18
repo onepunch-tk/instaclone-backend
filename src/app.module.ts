@@ -14,6 +14,7 @@ import { S3Module } from './s3/s3.module';
 import { PhotoModule } from './photo/photo.module';
 import { HashtagModule } from './hashtag/hashtag.module';
 import { LikeModule } from './like/like.module';
+import { CommentModule } from './comment/comment.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -56,6 +57,7 @@ import * as Joi from 'joi';
     PhotoModule,
     HashtagModule,
     LikeModule,
+    CommentModule,
   ],
   providers: [
     {

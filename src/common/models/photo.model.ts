@@ -16,6 +16,8 @@ export class Photo {
   caption?: string;
   @Field(() => [Hashtag], { nullable: true, defaultValue: [] })
   hashtags?: Hashtag[];
+  @Field(() => Boolean, { nullable: true, defaultValue: false })
+  isMine?: boolean;
   @Field(() => Date)
   createdAt: Date;
   @Field(() => Date)
