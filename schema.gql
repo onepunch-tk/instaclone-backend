@@ -30,6 +30,7 @@ type Photo {
   hashtags: [Hashtag!]
   createdAt: DateTime!
   updatedAt: DateTime!
+  likes: Int
 }
 
 type User {
@@ -49,6 +50,10 @@ type User {
 
 type Error {
   message: String!
+}
+
+type Success {
+  success: Boolean
 }
 
 type UserResponse {
@@ -73,10 +78,6 @@ type Token {
 type SignInResponse {
   errors: Error
   data: Token
-}
-
-type Success {
-  success: Boolean
 }
 
 type FollowResponse {
@@ -118,9 +119,25 @@ type PhotoListResponse {
   data: [Photo!]
 }
 
+type PhotoLikesUserListResponse {
+  errors: Error
+  data: [PickObjectType!]
+}
+
+type PickObjectType {
+  id: Int!
+  username: String!
+  avatar: String
+}
+
 type HashtagResponse {
   errors: Error
   data: Hashtag
+}
+
+type LikeOnPhotoResponse {
+  errors: Error
+  data: Success
 }
 
 type Query {
@@ -129,6 +146,7 @@ type Query {
   getFollow(getFollowData: GetFollowInput!): GetFollowResponse!
   getSignedUrl(signedUrlData: SignedUrlInput!): SignedUrlResponse!
   getPhotoById(getPhotoData: GetPhotoInput!): PhotoResponse!
+  getPhotoLikesUsers(getPhotoData: GetPhotoInput!): PhotoLikesUserListResponse!
   getPhotosByKeyword(photoListData: GetPhotoListInput!): PhotoListResponse!
   getHashtag(getHashtagData: GetHashtagInput!): HashtagResponse!
 }
@@ -147,10 +165,10 @@ input GetFollowInput {
   afterId: Int
   pageSize: Int!
   username: String!
-  role: SeeFollowRole! = ALL_FOLLOW
+  role: FollowRole! = ALL_FOLLOW
 }
 
-enum SeeFollowRole {
+enum FollowRole {
   FOLLOWED_BY
   FOLLOWING
   ALL_FOLLOW
@@ -184,6 +202,7 @@ type Mutation {
   follow(followData: FollowInput!): FollowResponse!
   editPhoto(editPhotoData: EditPhotoInput!): PhotoResponse!
   uploadPhoto(uploadPhotoData: UploadPhotoInput!): PhotoResponse!
+  likeOnPhoto(likeOnPhotoData: LikeOnPhotoInput!): LikeOnPhotoResponse!
 }
 
 input SignInInput {
@@ -215,7 +234,7 @@ scalar Upload
 
 input FollowInput {
   username: String!
-  role: SeeFollowRole!
+  role: FollowRole!
 }
 
 input EditPhotoInput {
@@ -226,4 +245,8 @@ input EditPhotoInput {
 input UploadPhotoInput {
   file: Upload!
   caption: String
+}
+
+input LikeOnPhotoInput {
+  id: Int!
 }

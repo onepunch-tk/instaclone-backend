@@ -13,7 +13,7 @@ export class FollowService {
 
   async getFollow(getFollowData: GetFollowInput): Promise<GetFollowResponse> {
     try {
-      const { username, afterId, role } = getFollowData;
+      const { username, role, afterId, pageSize } = getFollowData;
       const findUser = await this.prisma.user.findUnique({
         where: { username },
         select: {
@@ -31,20 +31,20 @@ export class FollowService {
         case FollowRole.ALL_FOLLOW:
           response.data = {
             ...response.data,
-            followedBy: await this.followedBy(findUser.id, afterId),
-            following: await this.following(findUser.id, afterId),
+            followedBy: await this.followedBy(findUser.id, afterId, pageSize),
+            following: await this.following(findUser.id, afterId, pageSize),
           };
           break;
         case FollowRole.FOLLOWED_BY:
           response.data = {
             ...response.data,
-            followedBy: await this.followedBy(findUser.id, afterId),
+            followedBy: await this.followedBy(findUser.id, afterId, pageSize),
           };
           break;
         case FollowRole.FOLLOWING:
           response.data = {
             ...response.data,
-            following: await this.following(findUser.id, afterId),
+            following: await this.following(findUser.id, afterId, pageSize),
           };
           break;
       }
@@ -104,7 +104,7 @@ export class FollowService {
     return exists.length !== 0;
   }
 
-  async followedBy(searchId: number, afterId: number) {
+  async followedBy(searchId: number, afterId: number, pageSize: number) {
     return this.prisma.user
       .findUnique({
         where: {
@@ -112,13 +112,13 @@ export class FollowService {
         },
       })
       .followedBy({
-        take: 5,
+        take: pageSize,
         skip: afterId ? 1 : 0,
         ...(afterId && { cursor: { id: afterId } }),
       });
   }
 
-  async following(searchId: number, afterId: number) {
+  async following(searchId: number, afterId: number, pageSize: number) {
     return this.prisma.user
       .findUnique({
         where: {
@@ -126,7 +126,7 @@ export class FollowService {
         },
       })
       .following({
-        take: 10,
+        take: pageSize,
         skip: afterId ? 1 : 0,
         ...(afterId && { cursor: { id: afterId } }),
       });

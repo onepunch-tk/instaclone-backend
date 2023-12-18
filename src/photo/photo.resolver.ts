@@ -1,5 +1,6 @@
 import {
   Args,
+  Int,
   Mutation,
   Parent,
   Query,
@@ -19,8 +20,9 @@ import { Hashtag } from '../common/models/hashtag.model';
 import { PhotoListResponse } from './dto/response/photo-list.resonse';
 import { GetPhotoListInput } from './dto/input/get-photo-list.input';
 import { EditPhotoInput } from './dto/input/edit-photo.input';
+import { PhotoLikesUserListResponse } from './dto/response/photo-likes-user-list.response';
 
-@Roles(GuardRole.AUTH)
+@Roles(GuardRole.PUBLIC)
 @Resolver(() => Photo)
 export class PhotoResolver {
   constructor(private readonly photoService: PhotoService) {}
@@ -35,13 +37,23 @@ export class PhotoResolver {
     return this.photoService.getHashtagsByPhotoId(photoId);
   }
 
-  @Roles(GuardRole.PUBLIC)
+  @ResolveField(() => Int)
+  async likes(@Parent() { id: photoId }: Photo) {
+    return this.photoService.getLikes(photoId);
+  }
+
   @Query(() => PhotoResponse)
   async getPhotoById(@Args('getPhotoData') { id: photoId }: GetPhotoInput) {
     return this.photoService.getPhotoById(photoId);
   }
 
-  @Roles(GuardRole.PUBLIC)
+  @Query(() => PhotoLikesUserListResponse)
+  async getPhotoLikesUsers(
+    @Args('getPhotoData') { id: photoId }: GetPhotoInput,
+  ): Promise<PhotoLikesUserListResponse> {
+    return this.photoService.getPhotoLikesUsers(photoId);
+  }
+
   @Query(() => PhotoListResponse)
   async getPhotosByKeyword(
     @Args('photoListData') photoListData: GetPhotoListInput,
@@ -49,6 +61,7 @@ export class PhotoResolver {
     return this.photoService.getPhotosByKeyword(photoListData);
   }
 
+  @Roles(GuardRole.AUTH)
   @Mutation(() => PhotoResponse)
   async editPhoto(
     @AuthUser() authUser: User,
@@ -57,6 +70,7 @@ export class PhotoResolver {
     return this.photoService.editPhoto(authUser, editPhotoData);
   }
 
+  @Roles(GuardRole.AUTH)
   @Mutation(() => PhotoResponse)
   async uploadPhoto(
     @AuthUser() authUser: User,

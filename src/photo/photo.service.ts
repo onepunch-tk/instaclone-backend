@@ -10,6 +10,7 @@ import {
   CreateOrConnectHashtag,
   hashtagParse,
 } from './utils/hashtag-parse.util';
+import { PhotoLikesUserListResponse } from './dto/response/photo-likes-user-list.response';
 
 @Injectable()
 export class PhotoService {
@@ -78,6 +79,36 @@ export class PhotoService {
       }
       return {
         data: { ...findPhoto },
+      };
+    } catch (e) {
+      return {
+        errors: {
+          message: e.message,
+        },
+      };
+    }
+  }
+
+  async getPhotoLikesUsers(
+    photoId: number,
+  ): Promise<PhotoLikesUserListResponse> {
+    try {
+      const findLikes = await this.prisma.like.findMany({
+        where: {
+          photoId,
+        },
+        select: {
+          user: {
+            select: {
+              username: true,
+              id: true,
+              avatar: true,
+            },
+          },
+        },
+      });
+      return {
+        data: findLikes.map((like) => like.user),
       };
     } catch (e) {
       return {
@@ -163,14 +194,13 @@ export class PhotoService {
         },
       };
     }
-    return Promise.resolve(undefined);
   }
 
   async getUserOfPhoto(id: number) {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
-  getHashtagsByPhotoId(photoId: number) {
+  async getHashtagsByPhotoId(photoId: number) {
     return this.prisma.hashtag.findMany({
       where: {
         photos: {
@@ -178,6 +208,14 @@ export class PhotoService {
             id: photoId,
           },
         },
+      },
+    });
+  }
+
+  async getLikes(photoId: number) {
+    return this.prisma.like.count({
+      where: {
+        photoId,
       },
     });
   }

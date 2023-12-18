@@ -6,6 +6,13 @@ class Error {
   @Field(() => String)
   message: string;
 }
+
+@ObjectType()
+export class Success {
+  @Field(() => Boolean, { nullable: true })
+  success?: boolean;
+}
+
 // ResponseType을 생성하는 고차 함수
 export function createResponse<T>(TItem: Type<T>) {
   @ObjectType({ isAbstract: true })

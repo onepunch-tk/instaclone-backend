@@ -20,4 +20,6 @@ export class Photo {
   createdAt: Date;
   @Field(() => Date)
   updatedAt: Date;
+  @Field(() => Int, { nullable: true })
+  likes?: number;
 }
