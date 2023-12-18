@@ -13,11 +13,11 @@ import { PhotoResponse } from './dto/response/photo.response';
 import { UploadPhotoInput } from './dto/input/upload-photo.input';
 import { AuthUser } from '../common/decorators/auth.decorator';
 import { User } from '../common/models/user.model';
-import { SeePhotoInput } from './dto/input/see-photo.input';
+import { GetPhotoInput } from './dto/input/get-photo.input';
 import { Photo } from '../common/models/photo.model';
 import { Hashtag } from '../common/models/hashtag.model';
 import { PhotoListResponse } from './dto/response/photo-list.resonse';
-import { PhotoListInput } from './dto/input/photo-list.input';
+import { GetPhotoListInput } from './dto/input/get-photo-list.input';
 import { EditPhotoInput } from './dto/input/edit-photo.input';
 
 @Roles(GuardRole.AUTH)
@@ -37,14 +37,14 @@ export class PhotoResolver {
 
   @Roles(GuardRole.PUBLIC)
   @Query(() => PhotoResponse)
-  async seePhoto(@Args('seePhotoData') { id: photoId }: SeePhotoInput) {
-    return this.photoService.seePhoto(photoId);
+  async getPhotoById(@Args('getPhotoData') { id: photoId }: GetPhotoInput) {
+    return this.photoService.getPhotoById(photoId);
   }
 
   @Roles(GuardRole.PUBLIC)
   @Query(() => PhotoListResponse)
   async getPhotosByKeyword(
-    @Args('photoListData') photoListData: PhotoListInput,
+    @Args('photoListData') photoListData: GetPhotoListInput,
   ) {
     return this.photoService.getPhotosByKeyword(photoListData);
   }

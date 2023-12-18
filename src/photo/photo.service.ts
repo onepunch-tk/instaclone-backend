@@ -3,7 +3,7 @@ import { User } from '../common/models/user.model';
 import { UploadPhotoInput } from './dto/input/upload-photo.input';
 import { PhotoResponse } from './dto/response/photo.response';
 import { PrismaRepository } from '../repositories/prisma.repository';
-import { PhotoListInput } from './dto/input/photo-list.input';
+import { GetPhotoListInput } from './dto/input/get-photo-list.input';
 import { PhotoListResponse } from './dto/response/photo-list.resonse';
 import { EditPhotoInput } from './dto/input/edit-photo.input';
 import {
@@ -67,7 +67,7 @@ export class PhotoService {
     }
   }
 
-  async seePhoto(photoId: number): Promise<PhotoResponse> {
+  async getPhotoById(photoId: number): Promise<PhotoResponse> {
     try {
       const findPhoto = await this.prisma.photo.findUnique({
         where: { id: photoId },
@@ -92,7 +92,7 @@ export class PhotoService {
     keyword,
     pageSize,
     afterId,
-  }: PhotoListInput): Promise<PhotoListResponse> {
+  }: GetPhotoListInput): Promise<PhotoListResponse> {
     try {
       const photos = await this.prisma.photo.findMany({
         where: {

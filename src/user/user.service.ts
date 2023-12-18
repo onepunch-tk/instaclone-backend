@@ -4,12 +4,12 @@ import { User } from '../common/models/user.model';
 import { CreateAccountInput } from './dto/input/create-account.input';
 import { hash } from '@node-rs/bcrypt';
 import { UserResponse } from './dto/reponse/user.response';
-import { SearchByUsernameArgs } from './dto/args/search-by-username.args';
+import { GetUserInput } from './dto/input/get-user.input';
 import { EditProfileInput } from './dto/input/edit-profile.input';
 import { EditProfileResponse } from './dto/reponse/edit-profile.response';
 import { createWriteStream } from 'fs';
 import { UserListResponse } from './dto/reponse/user-list.response';
-import { UserListInput } from './dto/input/user-list.input';
+import { GetUserListInput } from './dto/input/get-user-list.input';
 import { PaginationInput } from '../common/graphql/input';
 
 @Injectable()
@@ -105,7 +105,7 @@ export class UserService {
     }
   }
 
-  async seeProfile({ username }: SearchByUsernameArgs): Promise<UserResponse> {
+  async getProfile({ username }: GetUserInput): Promise<UserResponse> {
     try {
       const findUser = await this.prisma.user.findUnique({
         where: { username },
@@ -129,11 +129,11 @@ export class UserService {
     }
   }
 
-  async seeUserList({
+  async getUserList({
     keyword,
     afterId,
     pageSize,
-  }: UserListInput): Promise<UserListResponse> {
+  }: GetUserListInput): Promise<UserListResponse> {
     try {
       const userList = await this.prisma.user.findMany({
         where: {

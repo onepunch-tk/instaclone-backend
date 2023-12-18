@@ -3,4 +3,4 @@ import { createResponse } from '../../../common/graphql/response';
 import { Follow } from 'src/common/models/follow.model';
 
 @ObjectType()
-export class SeeFollowResponse extends createResponse(Follow) {}
+export class GetFollowResponse extends createResponse(Follow) {}

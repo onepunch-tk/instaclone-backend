@@ -1,13 +1,13 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaRepository } from '../repositories/prisma.repository';
 import { HashtagResponse } from './dto/response/hashtag.response';
-import { SeeHashtagInput } from './dto/input/see-hashtag.input';
+import { GetHashtagInput } from './dto/input/get-hashtag.input';
 import { PaginationInput } from '../common/graphql/input';
 
 @Injectable()
 export class HashtagService {
   constructor(private readonly prisma: PrismaRepository) {}
-  async seeHashtag({ hashtag }: SeeHashtagInput): Promise<HashtagResponse> {
+  async getHashtag({ hashtag }: GetHashtagInput): Promise<HashtagResponse> {
     try {
       const findHashtag = await this.prisma.hashtag.findUnique({
         where: { hashtag },

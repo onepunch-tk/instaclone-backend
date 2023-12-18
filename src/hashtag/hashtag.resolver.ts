@@ -11,7 +11,7 @@ import { GuardRole } from '../constants/role.enum';
 import { HashtagService } from './hashtag.service';
 import { Hashtag } from '../common/models/hashtag.model';
 import { HashtagResponse } from './dto/response/hashtag.response';
-import { SeeHashtagInput } from './dto/input/see-hashtag.input';
+import { GetHashtagInput } from './dto/input/get-hashtag.input';
 import { Photo } from '../common/models/photo.model';
 import { PaginationInput } from '../common/graphql/input';
 
@@ -34,7 +34,7 @@ export class HashtagResolver {
   }
 
   @Query(() => HashtagResponse)
-  async seeHashtag(@Args('seeHashtagData') seeHashtagData: SeeHashtagInput) {
-    return this.hashtagService.seeHashtag(seeHashtagData);
+  async getHashtag(@Args('getHashtagData') getHashtagData: GetHashtagInput) {
+    return this.hashtagService.getHashtag(getHashtagData);
   }
 }

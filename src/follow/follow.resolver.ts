@@ -12,8 +12,8 @@ import { FollowResponse } from './dto/reponse/follow.response';
 import { AuthUser } from '../common/decorators/auth.decorator';
 import { User } from '../common/models/user.model';
 import { FollowInput } from './dto/input/follow.input';
-import { SeeFollowResponse } from './dto/reponse/see-follow.response';
-import { SeeFollowInput } from './dto/input/see-follow.input';
+import { GetFollowResponse } from './dto/reponse/get-follow.response';
+import { GetFollowInput } from './dto/input/get-follow.input';
 import { FollowService } from './follow.service';
 import { Follow } from '../common/models/follow.model';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -59,11 +59,11 @@ export class FollowResolver {
     return this.followService.follow(authUser, followData);
   }
 
-  @Query(() => SeeFollowResponse)
-  async seeFollow(
+  @Query(() => GetFollowResponse)
+  async getFollow(
     @AuthUser() authUser: User,
-    @Args('seeFollowData') seeFoll0wData: SeeFollowInput,
-  ): Promise<SeeFollowResponse> {
-    return this.followService.seeFollow(seeFoll0wData);
+    @Args('getFollowData') getFollowData: GetFollowInput,
+  ): Promise<GetFollowResponse> {
+    return this.followService.getFollow(getFollowData);
   }
 }

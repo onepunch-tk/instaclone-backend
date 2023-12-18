@@ -1,20 +1,20 @@
 import { Field, InputType, registerEnumType } from '@nestjs/graphql';
-import { SeeFollowRole } from '../../../constants/role.enum';
+import { FollowRole } from '../../../constants/role.enum';
 import { PaginationInput } from '../../../common/graphql/input';
 
 // FollowRole enum을 GraphQL에 등록
-registerEnumType(SeeFollowRole, {
+registerEnumType(FollowRole, {
   name: 'SeeFollowRole', // GraphQL에서 사용될 Enum의 이름
 });
 
 @InputType()
-export class SeeFollowInput extends PaginationInput {
+export class GetFollowInput extends PaginationInput {
   @Field(() => String)
   username: string;
 
-  @Field(() => SeeFollowRole, {
+  @Field(() => FollowRole, {
     nullable: false,
-    defaultValue: SeeFollowRole.ALL_FOLLOW,
+    defaultValue: FollowRole.ALL_FOLLOW,
   })
-  role: SeeFollowRole;
+  role: FollowRole;
 }

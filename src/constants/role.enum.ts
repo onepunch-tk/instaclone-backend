@@ -4,12 +4,8 @@ export enum GuardRole {
 }
 
 export enum FollowRole {
-  FOLLOW = 'follow',
-  UN_FOLLOW = 'unfollow',
-}
-
-export enum SeeFollowRole {
   FOLLOWED_BY = 'followedBy',
   FOLLOWING = 'following',
   ALL_FOLLOW = 'allFollow',
+  UN_FOLLOW = 'unFollow',
 }
