@@ -20,20 +20,29 @@ import { GuardRole } from '../constants/role.enum';
 import { UserListResponse } from './dto/reponse/user-list.response';
 import { GetUserListInput } from './dto/input/get-user-list.input';
 import { Photo } from '../common/models/photo.model';
-import { Hashtag } from '../common/models/hashtag.model';
-import { PaginationInput } from '../common/dto/input';
+import { PaginationInput } from '../common/dto/input/pagination.input';
+import { PhotoLoader } from '../common/loaders/photo.loader';
+import { BatchUserPhotosArgs } from '../common/loaders/photo.loader.type';
 
 @Roles(GuardRole.PUBLIC)
 @Resolver(() => User)
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly photoLoader: PhotoLoader,
+  ) {}
 
   @ResolveField(() => [Photo])
   async photos(
-    @Parent() { id }: Hashtag,
+    @Parent() { id },
     @Args('paginationData') paginationData: PaginationInput,
   ) {
-    return this.userService.getPhotos(id, paginationData);
+    const batchLoadArgs: BatchUserPhotosArgs = {
+      userIds: [id],
+      paginationData,
+    };
+
+    return this.photoLoader.batchPhotos.load(batchLoadArgs);
   }
 
   @ResolveField(() => Boolean)

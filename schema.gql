@@ -56,10 +56,6 @@ type Error {
   message: String!
 }
 
-type Success {
-  success: Boolean
-}
-
 type UserResponse {
   errors: Error
   data: User
@@ -82,6 +78,10 @@ type Token {
 type SignInResponse {
   errors: Error
   data: Token
+}
+
+type Success {
+  success: Boolean
 }
 
 type FollowResponse {

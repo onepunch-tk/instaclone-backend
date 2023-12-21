@@ -6,6 +6,11 @@ export class PrismaRepository
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy
 {
+  constructor() {
+    super({
+      log: ['query', 'info', 'warn', 'error'], // 로깅 설정 추가
+    });
+  }
   async onModuleInit() {
     await this.connectToDatabase();
   }

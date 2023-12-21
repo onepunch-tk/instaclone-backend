@@ -10,7 +10,7 @@ import { EditProfileResponse } from './dto/reponse/edit-profile.response';
 import { createWriteStream } from 'fs';
 import { UserListResponse } from './dto/reponse/user-list.response';
 import { GetUserListInput } from './dto/input/get-user-list.input';
-import { PaginationInput } from '../common/dto/input';
+import { PaginationInput } from '../common/dto/input/pagination.input';
 
 @Injectable()
 export class UserService {
@@ -158,7 +158,10 @@ export class UserService {
     }
   }
 
-  async getPhotos(userId: number, { afterId, pageSize }: PaginationInput) {
+  async getPhotosByUserIds(
+    userId: number,
+    { afterId, pageSize }: PaginationInput,
+  ) {
     return this.prisma.photo.findMany({
       where: {
         userId,

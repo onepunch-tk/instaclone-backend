@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { PaginationInput } from '../../../common/dto/input';
+import { PaginationInput } from '../../../common/dto/input/pagination.input';
 
 @InputType()
 export class GetUserListInput extends PaginationInput {

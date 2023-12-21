@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { createResponse } from '../../../common/dto/response';
+import { createResponse } from '../../../common/dto/responses/response.helpers';
 
 @ObjectType()
 class Token {

@@ -11,7 +11,8 @@ import {
   hashtagParse,
 } from './utils/hashtag-parse.util';
 import { PhotoLikesUserListResponse } from './dto/response/photo-likes-user-list.response';
-import { PaginationInput } from '../common/dto/input';
+import { PaginationInput } from '../common/dto/input/pagination.input';
+import { Photo } from '../common/models/photo.model';
 
 @Injectable()
 export class PhotoService {
@@ -266,6 +267,31 @@ export class PhotoService {
     return this.prisma.comment.count({
       where: {
         photoId,
+      },
+    });
+  }
+
+  async getPhotosByUserIds(
+    userIds: number[],
+    { afterId, pageSize }: PaginationInput,
+  ): Promise<Photo[]> {
+    return this.prisma.photo.findMany({
+      where: {
+        userId: { in: userIds },
+      },
+      take: pageSize,
+      skip: afterId ? 1 : 0,
+      ...(afterId && { cursor: { id: afterId } }),
+    });
+  }
+
+  async getHashtagsByPhotoIds(photoIds: number[]) {
+    console.log('getHashtagsByPhotoIds');
+    return this.prisma.photo.findMany({
+      where: { id: { in: photoIds } },
+      select: {
+        id: true,
+        hashtags: true,
       },
     });
   }

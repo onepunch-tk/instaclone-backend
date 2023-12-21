@@ -1,22 +1,11 @@
-import { Field, ObjectType } from '@nestjs/graphql';
 import { Type } from '@nestjs/common';
-
-@ObjectType()
-class Error {
-  @Field(() => String)
-  message: string;
-}
-
-@ObjectType()
-export class Success {
-  @Field(() => Boolean, { nullable: true })
-  success?: boolean;
-}
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Error } from './error.response';
 
 // ResponseType을 생성하는 고차 함수
 export function createResponse<T>(TItem: Type<T>) {
   @ObjectType({ isAbstract: true })
-  abstract class ResponseType {
+  abstract class GenericResponseType {
     @Field(() => Error, { nullable: true })
     errors?: Error;
 
@@ -24,12 +13,12 @@ export function createResponse<T>(TItem: Type<T>) {
     data?: T;
   }
 
-  return ResponseType;
+  return GenericResponseType;
 }
 
 export function createArrayResponse<T>(TItem: Type<T>) {
   @ObjectType({ isAbstract: true })
-  abstract class ResponseType {
+  abstract class GenericResponseType {
     @Field(() => Error, { nullable: true })
     errors?: Error;
 
@@ -37,5 +26,5 @@ export function createArrayResponse<T>(TItem: Type<T>) {
     data?: T[];
   }
 
-  return ResponseType;
+  return GenericResponseType;
 }

@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaRepository } from '../repositories/prisma.repository';
 import { HashtagResponse } from './dto/response/hashtag.response';
 import { GetHashtagInput } from './dto/input/get-hashtag.input';
-import { PaginationInput } from '../common/dto/input';
+import { PaginationInput } from '../common/dto/input/pagination.input';
 
 @Injectable()
 export class HashtagService {
@@ -49,4 +49,6 @@ export class HashtagService {
       ...(afterId && { cursor: { id: afterId } }),
     });
   }
+
+  async getHashtagsByPhotoIds(photoIds: number[]) {}
 }

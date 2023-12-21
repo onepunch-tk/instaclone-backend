@@ -1,6 +1,6 @@
 import { Field, InputType, registerEnumType } from '@nestjs/graphql';
 import { FollowRole } from '../../../constants/role.enum';
-import { PaginationInput } from '../../../common/dto/input';
+import { PaginationInput } from '../../../common/dto/input/pagination.input';
 
 // FollowRole enum을 GraphQL에 등록
 registerEnumType(FollowRole, {

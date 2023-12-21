@@ -22,12 +22,16 @@ import { PhotoListResponse } from './dto/response/photo-list.resonse';
 import { GetPhotoListInput } from './dto/input/get-photo-list.input';
 import { EditPhotoInput } from './dto/input/edit-photo.input';
 import { PhotoLikesUserListResponse } from './dto/response/photo-likes-user-list.response';
-import { PaginationInput } from '../common/dto/input';
+import { PaginationInput } from '../common/dto/input/pagination.input';
+import { HashtagLoader } from '../common/loaders/hashtag.loader';
 
 @Roles(GuardRole.PUBLIC)
 @Resolver(() => Photo)
 export class PhotoResolver {
-  constructor(private readonly photoService: PhotoService) {}
+  constructor(
+    private readonly photoService: PhotoService,
+    private readonly hashtagLoader: HashtagLoader,
+  ) {}
 
   @ResolveField(() => User)
   async user(@Parent() { userId }: Photo) {
@@ -36,10 +40,10 @@ export class PhotoResolver {
 
   @ResolveField(() => [Hashtag])
   async hashtags(@Parent() { id: photoId }: Photo) {
-    return this.photoService.getHashtagsByPhotoId(photoId);
+    return this.hashtagLoader.batchHashtag.load(photoId);
   }
 
-  @ResolveField(() => [Hashtag])
+  @ResolveField(() => Boolean)
   async isMine(@Parent() { userId }: Photo, @Context() ctx: any) {
     const authUser = ctx.authUser;
     if (!authUser) return false;
