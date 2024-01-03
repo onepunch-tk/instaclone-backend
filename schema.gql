@@ -133,6 +133,11 @@ type PickObjectType {
   avatar: String
 }
 
+type DeletePhotoResponse {
+  errors: Error
+  data: Success
+}
+
 type HashtagResponse {
   errors: Error
   data: Hashtag
@@ -232,6 +237,7 @@ type Mutation {
   follow(followData: FollowInput!): FollowResponse!
   editPhoto(editPhotoData: EditPhotoInput!): PhotoResponse!
   uploadPhoto(uploadPhotoData: UploadPhotoInput!): PhotoResponse!
+  deletePhoto(deletePhotoData: DeletePhotoInput!): DeletePhotoResponse!
   likeOnPhoto(likeOnPhotoData: LikeOnPhotoInput!): LikeOnPhotoResponse!
   createComment(createCommentData: CreateCommentInput!): CreateCommentResponse!
 }
@@ -276,6 +282,10 @@ input EditPhotoInput {
 input UploadPhotoInput {
   file: Upload!
   caption: String
+}
+
+input DeletePhotoInput {
+  id: Int!
 }
 
 input LikeOnPhotoInput {

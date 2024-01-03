@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { User } from '../common/models/user.model';
 import { UploadPhotoInput } from './dto/input/upload-photo.input';
 import { PhotoResponse } from './dto/response/photo.response';
@@ -13,6 +17,7 @@ import {
 import { PhotoLikesUserListResponse } from './dto/response/photo-likes-user-list.response';
 import { PaginationInput } from '../common/dto/input/pagination.input';
 import { Photo } from '../common/models/photo.model';
+import { DeletePhotoResponse } from './dto/response/delete-photo.response';
 
 @Injectable()
 export class PhotoService {
@@ -189,6 +194,36 @@ export class PhotoService {
 
       return {
         data: { ...updatedPhoto },
+      };
+    } catch (e) {
+      return {
+        errors: {
+          message: e.message,
+        },
+      };
+    }
+  }
+
+  async deletePhoto(
+    authUserId: number,
+    photoId: number,
+  ): Promise<DeletePhotoResponse> {
+    try {
+      const deletePhoto = await this.prisma.photo.findUnique({
+        where: { id: photoId },
+      });
+
+      if (!deletePhoto) {
+        throw new ForbiddenException('not found photo.');
+      }
+
+      if (authUserId !== deletePhoto.userId) {
+        throw new UnauthorizedException();
+      }
+
+      await this.prisma.photo.delete({ where: { id: photoId } });
+      return {
+        data: { success: true },
       };
     } catch (e) {
       return {

@@ -24,6 +24,8 @@ import { EditPhotoInput } from './dto/input/edit-photo.input';
 import { PhotoLikesUserListResponse } from './dto/response/photo-likes-user-list.response';
 import { PaginationInput } from '../common/dto/input/pagination.input';
 import { HashtagLoader } from '../common/loaders/hashtag.loader';
+import { DeletePhotoResponse } from './dto/response/delete-photo.response';
+import { DeletePhotoInput } from './dto/input/delete-photo';
 
 @Roles(GuardRole.PUBLIC)
 @Resolver(() => Photo)
@@ -106,12 +108,12 @@ export class PhotoResolver {
     return this.photoService.uploadPhoto(authUser, uploadPhotoData);
   }
 
-  // @Roles(GuardRole.AUTH)
-  // @Mutation(() => DeletePhotoResponse)
-  // async deletePhoto(
-  //   @AuthUser() authUser: User,
-  //   @Args('deletePhotoData') deletePhotoData: DeletePhotoInput,
-  // ) {
-  //   return this.photoService.deletePhoto(authUser.id, deletePhotoData.id);
-  // }
+  @Roles(GuardRole.AUTH)
+  @Mutation(() => DeletePhotoResponse)
+  async deletePhoto(
+    @AuthUser() authUser: User,
+    @Args('deletePhotoData') deletePhotoData: DeletePhotoInput,
+  ) {
+    return this.photoService.deletePhoto(authUser.id, deletePhotoData.id);
+  }
 }
