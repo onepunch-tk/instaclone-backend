@@ -4,7 +4,7 @@
 
 type Hashtag {
   id: Int!
-  hashtag: String!
+  name: String!
   photos(paginationData: PaginationInput!): [Photo!]
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -216,7 +216,7 @@ input GetPhotoListInput {
 }
 
 input GetHashtagInput {
-  hashtag: String!
+  name: String!
 }
 
 input GetCommentsInput {

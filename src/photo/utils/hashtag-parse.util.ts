@@ -1,6 +1,12 @@
 export interface CreateOrConnectHashtag {
-  where: { hashtag: string };
-  create: { hashtag: string };
+  hashtag: {
+    connectOrCreate: {
+      where: {
+        name: string;
+      };
+      create: { name: string };
+    };
+  };
 }
 
 export const hashtagParse = (
@@ -8,16 +14,20 @@ export const hashtagParse = (
 ): CreateOrConnectHashtag[] | null => {
   //parse caption
   const hashtags = caption.match(/#[\w!@#$%^&*()_+\[\]\-={}가-힣]+/g);
-  if (hashtags) {
-    return hashtags.map((hashtag) => ({
-      where: {
-        hashtag,
-      },
-      create: {
-        hashtag,
-      },
-    }));
+  if (!hashtags) {
+    return null;
   }
 
-  return null;
+  return hashtags.map((hashtag) => ({
+    hashtag: {
+      connectOrCreate: {
+        where: {
+          name: hashtag,
+        },
+        create: {
+          name: hashtag,
+        },
+      },
+    },
+  }));
 };

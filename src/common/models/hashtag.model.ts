@@ -6,7 +6,7 @@ export class Hashtag {
   @Field(() => Int)
   id: number;
   @Field(() => String)
-  hashtag: string;
+  name: string;
   @Field(() => [Photo], { nullable: true, defaultValue: [] })
   photos?: Photo[];
   @Field(() => Date)

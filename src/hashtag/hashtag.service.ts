@@ -7,10 +7,12 @@ import { PaginationInput } from '../common/dto/input/pagination.input';
 @Injectable()
 export class HashtagService {
   constructor(private readonly prisma: PrismaRepository) {}
-  async getHashtag({ hashtag }: GetHashtagInput): Promise<HashtagResponse> {
+  async getHashtag({
+    name: hashtag,
+  }: GetHashtagInput): Promise<HashtagResponse> {
     try {
       const findHashtag = await this.prisma.hashtag.findUnique({
-        where: { hashtag },
+        where: { name: hashtag },
       });
       if (!findHashtag) {
         throw new ForbiddenException('not found hashtag.');
@@ -32,7 +34,7 @@ export class HashtagService {
       where: {
         hashtags: {
           some: {
-            id,
+            hashtagId: id,
           },
         },
       },
@@ -42,7 +44,11 @@ export class HashtagService {
   async getPhotos(id: number, { afterId, pageSize }: PaginationInput) {
     return this.prisma.photo.findMany({
       where: {
-        hashtags: { some: { id } },
+        hashtags: {
+          some: {
+            hashtagId: id,
+          },
+        },
       },
       take: pageSize,
       skip: afterId ? 1 : 0,

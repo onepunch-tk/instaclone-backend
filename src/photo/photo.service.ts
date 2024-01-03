@@ -24,9 +24,7 @@ export class PhotoService {
     try {
       let connectHashtags: CreateOrConnectHashtag[] = null;
       if (uploadPhotoData.caption) {
-        console.log(uploadPhotoData.caption);
         connectHashtags = hashtagParse(uploadPhotoData.caption);
-        console.log(connectHashtags);
       }
 
       const file: string = '';
@@ -42,6 +40,7 @@ export class PhotoService {
         // delete uploadPhotoData.file;
         // file = `http://localhost:3000/static/${uploadFileName}`;
       }
+
       const createdPhoto = await this.prisma.photo.create({
         data: {
           file,
@@ -52,12 +51,16 @@ export class PhotoService {
             },
           },
           hashtags: {
-            ...(connectHashtags && {
-              connectOrCreate: connectHashtags,
-            }),
+            ...(connectHashtags && { create: connectHashtags }),
           },
         },
       });
+
+      // hashtags: {
+      // ...(connectHashtags && {
+      //     create: connectHashtags,
+      //   }),
+      // },
       return {
         data: { ...createdPhoto },
       };
@@ -159,33 +162,31 @@ export class PhotoService {
           id,
           userId: authUser.id,
         },
-        include: {
-          hashtags: {
-            select: {
-              id: true,
-            },
-          },
-        },
       });
       if (!findPhoto) {
         throw new ForbiddenException('not found photo.');
       }
-      const disconnectHashtags = findPhoto.hashtags.map((hashtag) => ({
-        id: hashtag.id, // 해시태그의 고유 ID를 사용
-      }));
+
+      // 기존 해시태그 연결 해제 (HashtagsOnPhotos 레코드 삭제)
+      await this.prisma.hashtagsOnPhotos.deleteMany({
+        where: {
+          photoId: id,
+        },
+      });
+
       const connectHashtags = hashtagParse(caption);
       const updatedPhoto = await this.prisma.photo.update({
         where: { id },
         data: {
           caption,
           hashtags: {
-            ...(disconnectHashtags && { disconnect: disconnectHashtags }),
             ...(connectHashtags && {
-              connectOrCreate: connectHashtags,
+              create: connectHashtags,
             }),
           },
         },
       });
+
       return {
         data: { ...updatedPhoto },
       };
@@ -243,18 +244,6 @@ export class PhotoService {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
-  async getHashtagsByPhotoId(photoId: number) {
-    return this.prisma.hashtag.findMany({
-      where: {
-        photos: {
-          some: {
-            id: photoId,
-          },
-        },
-      },
-    });
-  }
-
   async getLikes(photoId: number) {
     return this.prisma.like.count({
       where: {
@@ -286,12 +275,22 @@ export class PhotoService {
   }
 
   async getHashtagsByPhotoIds(photoIds: number[]) {
-    console.log('getHashtagsByPhotoIds');
-    return this.prisma.photo.findMany({
-      where: { id: { in: photoIds } },
-      select: {
-        id: true,
-        hashtags: true,
+    return this.prisma.hashtag.findMany({
+      where: {
+        photos: {
+          some: {
+            photoId: {
+              in: photoIds,
+            },
+          },
+        },
+      },
+      include: {
+        photos: {
+          select: {
+            photoId: true,
+          },
+        },
       },
     });
   }

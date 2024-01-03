@@ -12,13 +12,21 @@ export class HashtagLoader {
       const photoHashtags = await this.photoService.getHashtagsByPhotoIds(
         photoIds,
       );
-      const hashtagsMap = new Map<number, Hashtag[]>();
-      photoHashtags.forEach((photo) => {
-        if (!hashtagsMap.has(photo.id)) {
-          hashtagsMap.set(photo.id, []);
-        }
-        hashtagsMap.get(photo.id).push(...photo.hashtags);
-      });
+
+      const hashtagsMap = photoHashtags.reduce((map, hashtag) => {
+        hashtag.photos.forEach((photo) => {
+          if (!map.has(photo.photoId)) {
+            map.set(photo.photoId, []);
+          }
+          map.get(photo.photoId).push({
+            id: hashtag.id,
+            name: hashtag.name,
+            createdAt: hashtag.createdAt,
+            updatedAt: hashtag.updatedAt,
+          });
+        });
+        return map;
+      }, new Map<number, Hashtag[]>());
 
       return photoIds.map((photoId) => hashtagsMap.get(photoId) || []);
     },

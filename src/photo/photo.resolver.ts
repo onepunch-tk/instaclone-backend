@@ -105,4 +105,13 @@ export class PhotoResolver {
   ) {
     return this.photoService.uploadPhoto(authUser, uploadPhotoData);
   }
+
+  // @Roles(GuardRole.AUTH)
+  // @Mutation(() => DeletePhotoResponse)
+  // async deletePhoto(
+  //   @AuthUser() authUser: User,
+  //   @Args('deletePhotoData') deletePhotoData: DeletePhotoInput,
+  // ) {
+  //   return this.photoService.deletePhoto(authUser.id, deletePhotoData.id);
+  // }
 }
